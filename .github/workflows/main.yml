@@ -19,30 +19,48 @@ on:
     - ecr/**
     - node-app/**
     - pyy-app/**
-env:
-    TF_CLOUD_ORGANIZATION: "orenr2301"
-    TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-    TF_WORKSPACE: "octoren"
-    CONFIG_DIRECTORY: "./"
+
+permissions:
+     contents: read
+     pull-requests: write
     
 jobs:
   terraform:
-   name: "Terraform upload"
+   name: "ecr"
    runs-on: ubuntu-latest
-   permissions:
-     contents: read
-     pull-requests: write
+   defaults:
+     run:
+       shell: bash
+       
    steps:
-  
+  # Checkout the repository to the GitHub Actions runner
    - name: Checkout
      uses: actions/checkout@v3
-     
-   - name: Upload configurations
-     uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
-     id: plan-upload
      with:
-       workspace: ${{ env.TF_WORKSPACE }}
-       directory: ${{ env.CONFGI_DIRECTORY }}
-       speculative: true
+       terraform_wrapper: false
+     
+   - name: Install Terraform 
+     run: |
+       wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+       echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+       sudo apt update && sudo apt install terraform
+   
+   - name:  Terraorm ecr init
+     id: init
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+     working-directory: ./ecr
+     run: terraform init
+     
+   - name: Terraform ecr plan
+     id: plan 
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+     working-directory: ./ecr
+     run: terraform plan -input=false 
     
+  
+   
    
