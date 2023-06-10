@@ -1,0 +1,48 @@
+name: 'Terraform deploy'
+
+on:
+  push:
+    branches:
+    - main
+    paths: 
+    - alb/**
+    - ec2/**
+    - ecr/**
+    - node-app/**
+    - pyy-app/**
+  pull_request:
+    branches:
+    - main
+    paths: 
+    - alb/**
+    - ec2/**
+    - ecr/**
+    - node-app/**
+    - pyy-app/**
+env:
+    TF_CLOUD_ORGANIZATION: "orenr2301"
+    TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+    TF_WORKSPACE: "octoren"
+    CONFIG_DIRECTORY: "./"
+    
+jobs:
+  terraform:
+   name: "Terraform upload"
+   runs-on: ubuntu-latest
+   permissions:
+     contents: read
+     pull-requests: write
+   steps:
+  
+   - name: Checkout
+     uses: actions/checkout@v3
+     
+   - name: Upload configurations
+     uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
+     id: plan-upload
+     with:
+       workspace: ${{ env.TF_WORKSPACE }}
+       directory: ${{ env.CONFGI_DIRECTORY }}
+       speculative: true
+    
+   
