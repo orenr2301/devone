@@ -14,4 +14,4 @@ ENV DB_NAME="docker_db"
 EXPOSE 80
 
 CMD ["python", "app.py"]
-##note note##
+##note note  note ##
