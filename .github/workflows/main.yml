@@ -37,7 +37,7 @@ jobs:
    - name: Checkout
      uses: actions/checkout@v3
      with:
-       terraform_wrapper: false
+      terraform_wrapper: false
      
    - name: Install Terraform 
      run: |
@@ -59,7 +59,16 @@ jobs:
        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
      working-directory: ./ecr
-     run: terraform plan -input=false 
+     run: terraform plan -input=false
+  
+   - name: Terraform apply
+     id: apply
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+     working-directory: ./ecr
+     run: terraform apply -auto-approve -input=false
+
     
   
    
