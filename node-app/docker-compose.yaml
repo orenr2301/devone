@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: node-app
+    image: nodejsapp:1
+    ports:
+    - 80:80
+    networks:
+    - my_network
+
+  mongodb:
+    container_name: mongodb
+    image: mongog:v2
+    ports:
+    - 27017:27017
+    restart: always
+    networks:
+    - my_network
+
+
+
+networks:
+  my_network:
+      external: true

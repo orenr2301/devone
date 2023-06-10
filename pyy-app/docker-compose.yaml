@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: py-app
+    image: pyapp:3
+    ports:
+    - 80:80
+    networks:
+    - my_network
+
+  mongodb:
+    container_name: mongodb
+    image: mongog:v2
+    ports:
+    - 27017:27017
+    restart: always
+      #volumes:
+      #- mongoDB:/data/db
+      #- ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+    - my_network
+
+
+      #volumes:
+      #mongoDB: {}
+
+networks:
+  my_network:
+      external: true
