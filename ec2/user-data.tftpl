@@ -14,6 +14,9 @@ export ecr_url=${ecr_url}
 /usr/bin/aws ecr get-login-password --region ${ecr_region} | docker login --username AWS --password-stdin ${ecr_url}
 docker network create octo_network
 
-cat <<EOF > docker-compose.yaml
+aws cp s://octo-oren-bucket/docker-compose.yaml .
+aws cp s://octo-oren-bucket/mongo-init.js .
+
+docker-compose up -d
 
 
