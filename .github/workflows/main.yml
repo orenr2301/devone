@@ -132,8 +132,8 @@ jobs:
       working-directory: ./node-app/compose-app
       run: |
         sed -i  "0,/image:/ s/image:.*/image: $ECR_REGISTRY\/$ECR_REPOSITORY:$IMAGE_TAG_JS/" docker-compose.yaml
-        aws cp docker-compose.yaml s3://octo-oren-bucket
-        aws cp mongo-init.js s3://octo-oren-bucket
+        aws s3 cp docker-compose.yaml s3://octo-oren-bucket
+        aws s3 cp mongo-init.js s3://octo-oren-bucket
             
         
   ec2:
