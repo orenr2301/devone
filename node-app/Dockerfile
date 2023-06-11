@@ -6,9 +6,7 @@ COPY package.json ./
 
 RUN npm install
 
-COPY app.js .
-COPY package.json .
-COPY package-lock.json .
+COPY . .
 
 EXPOSE 80
 
