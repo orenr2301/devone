@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
       const html = `<h1>Quantity of Apples: ${applesQty}</h1>`;
       res.send(html);
 
-      // Close the MongoDB connection
+      // Close the MongoDB connection gp
       client.close();
     });
   });
