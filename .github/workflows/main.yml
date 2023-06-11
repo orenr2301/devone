@@ -131,7 +131,7 @@ jobs:
         IMAGE_TAG_JS: octo-nodejs
       working-directory: ./node-app/compose-app
       run: |
-        sed -i '0,/image:/s/^image:/imgae: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS/' docker-compose.yaml
+        sed -i  "0,/image:/ s/image:.*/image: $ECR_REGISTRY\/$ECR_REPOSITORY:$IMAGE_TAG_JS/" docker-compose.yaml
         aws cp docker-compose.yaml s3://octo-oren-bucket
         aws cp mongo-init.js s3://octo-oren-bucket
             
