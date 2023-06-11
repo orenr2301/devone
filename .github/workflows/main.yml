@@ -71,6 +71,7 @@ jobs:
   build-image:
     name: "build and push"
     runs-on: ubuntu-latest
+    needs: terraform-ecr-s3
     
     steps:
     
