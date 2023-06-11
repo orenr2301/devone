@@ -103,3 +103,31 @@ resource "aws_iam_role_policy" "octo_ec2_policy" {
 }
 EOF
 }
+
+resource "aws_iam_role_policy" "octo_ec2_s3_policy" {
+  name = "octo_ec2_s3_policy"
+  role = aws_iam_role.octo-ec2-role.id
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:DeleteObject"
+      ],
+      "Sid" : "VisualEditor",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::*/*",
+        "arn:aws:s3:::${var.s3_name}"
+      ]
+    }
+  ]
+}
+EOF
+}
+

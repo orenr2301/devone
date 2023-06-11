@@ -32,3 +32,19 @@ resource "aws_ecr_repository" "ecr" {
     tags = var.tags 
   
 }
+
+resource "aws_s3_bucket" "octo_s3" {
+  bucket = "${var.s3_name}"
+  force_destroy = true
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  tags = {
+    Name = "${var.s3_name}"
+    Environment = "test"
+  }
+}
+
+

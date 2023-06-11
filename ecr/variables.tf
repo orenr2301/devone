@@ -25,3 +25,8 @@ variable "encrypt_type" {
     default = "KMS"
 }
 
+variable "s3_name" {
+    description = "s3 bucket name"
+    type = string
+    default = null
+}

@@ -7,3 +7,5 @@ ecr_name = [
 ]
 
 image_mutability = "IMMUTABLE"
+
+s3_name = "octo-oren-bucket"

@@ -52,3 +52,9 @@ data "aws_ami" "octo_ami" {
     }
   
 }
+
+variable "s3_name" {
+    description = "s3 bucket name"
+    type = string
+    default = "octo-oren-bucket"
+}
