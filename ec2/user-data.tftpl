@@ -11,9 +11,9 @@ export ecr_region=${ecr_region}
 export ecr_url=${ecr_url}
 
 
-docker pull nginx
-docker tag nginx:latest "${ecr_url}":nginx_late_16
 /usr/bin/aws ecr get-login-password --region ${ecr_region} | docker login --username AWS --password-stdin ${ecr_url}
-docker push "${ecr_url}":nginx_late_16
+docker network create octo_network
+
+cat <<EOF > docker-compose.yaml
 
 
