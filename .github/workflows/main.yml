@@ -25,8 +25,8 @@ permissions:
      pull-requests: write
     
 jobs:
-  terraform-ecr:
-   name: "ecr"
+  terraform-ecr-s3:
+   name: "ecr/s3"
    runs-on: ubuntu-latest
   #  defaults:
   #    run:
@@ -43,7 +43,7 @@ jobs:
      with:
       terraform_wrapper: false
    
-   - name:  Terraorm ecr init
+   - name:  Terraorm ecr/s3 init
      id: init
      env: 
        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
@@ -51,7 +51,7 @@ jobs:
      working-directory: ./ecr
      run: terraform init
      
-   - name: Terraform ecr plan
+   - name: Terraform ecr/s3 plan
      id: plan 
      env: 
        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
@@ -93,10 +93,10 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: devone
-        IMAGE_TAG: devone_v1
+        IMAGE_TAG_JS: octo-nodejs
       working-directory: ./node-app
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
         
@@ -138,3 +138,42 @@ jobs:
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
       run: terraform apply -auto-approve -input=false
+
+  change-content:
+    name: deploy to s3
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Configs AWS crdentails 
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        aws-region: eu-central-1
+    
+    - name: login to ecr
+      id: login-ecr 
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: changing image names in docker-compose
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: devone
+        IMAGE_TAG_JS: octo-nodejs
+      working-directory: ./node-app
+      run: |
+        sed -i '0,/image:/s/^image:/imgae: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS/' docker-compose.yaml
+        aws cp docker-compose.yaml s3://octo-oren-bucket
+        aws cp mongo-init.js s3://octo-oren-bucket
+
+
+        
+
+   
