@@ -98,7 +98,7 @@ jobs:
       working-directory: ./node-app
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS
   
   change-content:
     name: deploy to s3
