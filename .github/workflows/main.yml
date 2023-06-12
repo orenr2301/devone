@@ -159,7 +159,7 @@ jobs:
       run: terraform apply -auto-approve -input=false
   
   alb:
-    name: deploy ec2 instance
+    name: deploy alb
     runs-on: ubuntu-latest
     needs: ec2
 
@@ -190,7 +190,21 @@ jobs:
       run: terraform apply -auto-approve -input=false
 
  
+  sleep:
+    name: sleeping
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    needs: alb
     
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: sleeping before destruction
+      run: sleep 600       
 
 
  
