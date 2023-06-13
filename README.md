@@ -10,8 +10,8 @@ Prior Knowledge to gain or to have:
 # Content
 **[1. Hello, Nice to meet you](#heading-1)**
 * [Introduction](#Introduction)  
-* [Design & Prerequisites](#Desig&Prequisets--1-2)    
-* [Let's Start](#start--1-3)  
+* [Design & Prerequisites](#Desig-&-Prequisets)    
+* [Let's Start](#let's-start)  
 
 ## Welcome 
 
@@ -21,7 +21,7 @@ Prior Knowledge to gain or to have:
 
 **Backend IaC:** Terraform
 
-**Container Engine :** Docker
+**Container Engine:** Docker
 
 **Cloud Provider:** aws 
 
