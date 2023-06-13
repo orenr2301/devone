@@ -56,7 +56,7 @@ jobs:
        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
      working-directory: ./ecr
-     run: terraform plan -input=false -out ecr-s3-plan
+     run: terraform plan -input=false
   
    - name: Terraform apply
      id: apply
@@ -168,7 +168,7 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
-      run: terraform plan -input=false -out ec2-plan
+      run: terraform plan -input=false
   
     - name: Terraform ec2 Apply  
       id: apply 
@@ -204,11 +204,7 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
-<<<<<<< HEAD
       run: terraform plan -input=false 
-=======
-      run: terraform plan -input=false -out alb-plan
->>>>>>> 52439758d0a8401ae9ff4f888ca452b1b6241d32
   
     - name: Terraform alb Apply  
       id: apply 
@@ -260,11 +256,7 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
-<<<<<<< HEAD
-      run: terraform destroy -auto-approve alb-plan
-=======
-      run: terraform destroy alb-plan -auto-approve -input=false
->>>>>>> 52439758d0a8401ae9ff4f888ca452b1b6241d32
+      run: terraform apply -auto-approve alb-plan
 
   tf-destroy-ec2:
     name: destroy ec2 instance
@@ -294,11 +286,7 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
-<<<<<<< HEAD
-      run: terraform destroy -auto-approve -input=ec2-plan
-=======
-      run: terraform destroy ec2-plan -auto-approve -input=false
->>>>>>> 52439758d0a8401ae9ff4f888ca452b1b6241d32
+      run: terraform apply -auto-approve -input=ec2-plan
 
   tf-destroy-ecr-s3:
     name: destroy "ecr/s3"
@@ -330,4 +318,4 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ecr
-      run: terraform destroy -auto-approve ecr-s3-plan 
+      run: terraform apply -auto-approve ecr-s3-plan 
