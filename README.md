@@ -248,7 +248,7 @@ if __name__ == "__main__":
 For our CI/CD purposes we want to containerize the application in order to fast deploy. I'm Assuming you are already familiar with Docker file, and image build
 
 ### NodeJS Doockerfile
-
+<details><summary>SHOW</summary>
 
 Below NodeJS Docker file
 
