@@ -232,4 +232,8 @@ if __name__ == "__main__":
 ```
 
 
+* Take a good look over these url we will need it to reference something else
+  ~~~bash
+   url = "mongodb://admin:admin@mongodb:27017"
+  ~~~
 
