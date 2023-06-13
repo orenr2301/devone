@@ -66,12 +66,12 @@ jobs:
      working-directory: ./ecr
      run: |
        terraform apply -auto-approve -input=false
-       terraform plan -destroy -out /tmp/ecr-tfplan
+       terraform plan -destroy -out /tmp/ecr_s3.tfplan
 
    - uses: actions/upload-artifact@v3
      with:
       name: ecr-tfplan
-      path: /tmp/ecr-tfplan
+      path: /tmp/ecr_s3.tfplan
        
 
  
