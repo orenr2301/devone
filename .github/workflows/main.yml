@@ -71,7 +71,7 @@ jobs:
    - uses: actions/upload-artifact@v3
      with:
       name: ecr_s3-plan
-      path: ./ecr/ecr_s3-plan-art
+      path: ecr-s3-plan
        
 
  
