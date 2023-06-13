@@ -9,17 +9,18 @@ terraform {
 }
 
 terraform {
-  required_providers {
-    aws = {
-        source = "hashicorp/aws"
-        version = "~> 3.0"
+    required_providers {
+        aws = {
+            source = "hashicorp/aws"
+            version = "~> 3.0"
+        }
     }
-  }
 }
 
+
 provider "aws" {
-    /* access_key = "AWS ACCESS KEY"
-    secret_key = "AWS SECRET KEY" */
+    access_key = var.aws_access_key
+    secret_key = var.aws_secret_key
     region = "eu-central-1"
     profile = "default"
 }
