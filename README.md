@@ -5,10 +5,10 @@ Prior Knowledge to gain or to have:
  - Basic or prior Terraform Experience/knowledge 
  - Good AWS architecture Understanding
  - A bit of coding/scripting knowledge/experience better have prior knowledge of the following languages, I'm not teaching here how to code from scratch
--[x] Python
--[x] NodeJS
--[x] Bash
--[x] HTML
+- [x] Python
+- [x] NodeJS
+- [x] Bash
+- [x] HTML
 
 
 # Content
