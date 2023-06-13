@@ -10,7 +10,7 @@ Prior Knowledge to gain or to have:
 # Content
 **[1. Hello, Nice to meet you](#heading-1)**
 * [Introduction](#Introduction)  
-* [Design & Prerequisites](#Desig-&-Prequisets)    
+* [Design & Prerequisites](#Design-&-Prerequisites)    
 * [Let's Start](#let's-start)  
 
 ## Welcome 
