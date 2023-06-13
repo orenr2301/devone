@@ -53,10 +53,10 @@ And most industry-standard tools out there.
 
 ## Design
 \\
- -let's talk Design First 
+ lets talk about  Design First 
 
 
-1. We Need to perform the Following:
+We Need to perform the following:
 
     - Building Docker images, 
     
@@ -70,7 +70,21 @@ And most industry-standard tools out there.
     Seebelowo the  Architecture flow:
 ![image](https://github.com/orenr2301/devone/assets/117763723/6042d14a-d64a-4442-a01e-4d750c3bc2df)
 
-   
+\\
+
+## Prerequisites
+
+1. You need to have an AWS account
+
+   1.1 From your AWS account IAM create an Access and Secret Key
+
+   1.2 Download aws-cli to your pc
+2. Visual Studio Code
+3. Githab Account
+4. Terraform Cli - You would like to test Terraform from your local machine to check your code   
+5. Coffee and something to eat Next To You. 
+
+
 
 
    
