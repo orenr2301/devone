@@ -66,12 +66,12 @@ jobs:
      working-directory: ./ecr
      run: |
        terraform apply -auto-approve -input=false
-       terraform plan -destroy -out ecr-s3-plan
+       terraform plan -destroy -out ./ecr/ecr-tfplan
 
    - uses: actions/upload-artifact@v3
      with:
       name: ecr_s3-plan
-      path: ecr-s3-plan
+      path: ./ecr/ecr-tfplan
        
 
  
@@ -93,8 +93,7 @@ jobs:
     
     - name: Download artifacts
       uses: actions/download-artifact@v2
-      with:
-        name: ecr-s3-plan
+     
       
       
     - name: Install Terraform 
