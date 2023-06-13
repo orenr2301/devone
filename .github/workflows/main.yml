@@ -66,12 +66,12 @@ jobs:
      working-directory: ./ecr
      run: |
        terraform apply -auto-approve -input=false
-       terraform plan -destroy -out /tmp/ecr-s3-plan
+       terraform plan -destroy -out ecr-s3-plan
 
    - uses: actions/upload-artifact@v3
      with:
       name: ecr_s3-plan
-      path: /tmp/ecr-s3-plan
+      path: ecr-s3-plan
        
 
  
@@ -107,4 +107,4 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ecr
-      run: terraform apply -auto-approve ecr-s3-plan 
+      run: terraform apply ecr-s3-plan
