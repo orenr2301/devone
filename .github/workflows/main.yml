@@ -108,4 +108,4 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ecr
-      run: terraform apply ecr-tfplan -auto-approve
+      run: terraform apply ecr-tfplan
