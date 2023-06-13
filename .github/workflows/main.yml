@@ -40,22 +40,29 @@ jobs:
      
    - name: Install Terraform 
      uses: hashicorp/setup-terraform@v2
-     with:
-       cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
      
-    
+   
    - name:  Terraorm ecr/s3 init
      id: init
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
      working-directory: ./ecr
      run: terraform init
      
    - name: Terraform ecr/s3 plan
      id: plan 
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
      working-directory: ./ecr
-     run: terraform plan -input=false
+     run: terraform plan -input=false -out ecr-s3-plan
   
    - name: Terraform apply
      id: apply
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
      working-directory: ./ecr
      run: terraform apply -auto-approve -input=false
 
@@ -98,7 +105,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    needs: build-image
+    needs: [terraform-ecr-s3, build-image]
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -131,7 +138,7 @@ jobs:
   ec2:
     name: deploy ec2 instance
     runs-on: ubuntu-latest
-    needs: change-content
+    needs: [change-content, terraform-ecr-s3]
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -142,57 +149,68 @@ jobs:
     - name: Install Terraform 
       uses: hashicorp/setup-terraform@v2
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+         terraform_wrapper: false
 
     - name:  Terraorm ec2 init
       id: init
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
       run: terraform init
 
     - name: Terraform ec2 plan
       id: plan 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
-      run: terraform plan -input=false
+      run: terraform plan -input=false -out ec2-plan
   
     - name: Terraform ec2 Apply  
       id: apply 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
       run: terraform apply -auto-approve -input=false
   
-alb:
-  name: deploy ec2 instance
-  runs-on: ubuntu-latest
-  needs: ec2
+  alb:
+    name: deploy alb
+    runs-on: ubuntu-latest
+    needs: ec2
 
-  steps:
-    # Checkout the repository to the GitHub Actions runner
+    steps:
+      # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
-      
-    - name: Install Terraform 
-      uses: hashicorp/setup-terraform@v2
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-    
+
     - name:  Terraorm alb init
       id: init
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
       run: terraform init
 
     - name: Terraform alb plan
       id: plan 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
-      run: terraform plan -input=false
+      run: terraform plan -input=false -out alb-plan
   
     - name: Terraform alb Apply  
       id: apply 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
       run: terraform apply -auto-approve -input=false
 
-
-
   sleep:
-    name: sleeping
+    name: deploy to s3
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -205,11 +223,11 @@ alb:
       uses: actions/checkout@v3
 
     - name: sleeping before destruction
-      run: sleep 600       
-
-
-  tf-refresh:
-    name: refresh states
+      run: sleep 10
+    
+    
+  tf-destroy-alb:
+    name: destroy alb
     runs-on: ubuntu-latest
     needs: sleep
 
@@ -218,106 +236,78 @@ alb:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install Terraform 
-      uses: hashicorp/setup-terraform@v2
+    - uses: actions/upload-artifact@v3
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-    - name: refresh alb 
-      id: alb
-      working-directory: ./alb
-      run: terraform refresh
-
-    - name: refresh ec2
-      id: ec2
-      working-directory: ./ec2
-      run: terraform refresh
-    
-    - name: refresh ecr/s3
-      id: ecr_s3
-      working-directory: ./ecr
-      run: terraform refresh
+        name: alb-plan
+        path: alb-plan
 
   
-  tf-destroy-alb:
-    name: destroy alb
-    runs-on: ubuntu-latest
-    needs: tf-refresh
-
-    steps:
-      # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Install Terraform 
-      uses: hashicorp/setup-terraform@v2
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-
-
-    - name: alb plan destroy
-      id: plan_destroy_alb
+    - name: Terraform alb destroy  
+      id: destroy
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
-      run: terraform plan -destroy -input=false
-  
-    - name: alb apply destroy  
-      id: destroy_alb
-      working-directory: ./alb
-      run: terraform apply -destroy -auto-approve -input=false
+      run: terraform destroy alb-plan -auto-approve -input=false
 
   tf-destroy-ec2:
-    name: destroy ec2
+    name: destroy ec2 instance
     runs-on: ubuntu-latest
-    needs: tf-destroy-alb
+    needs: [sleep, tf-destroy-alb]
 
     steps:
       # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ec2-plan
+        path: ec2-plan
           
           
     - name: Install Terraform 
       uses: hashicorp/setup-terraform@v2
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
 
-
-    - name: ec2 plan destroy
-      id: plan_destroy_ec2
-      working-directory: ./ec2
-      run: terraform plan -destroy -input=false
   
-    - name: ec2 apply destroy  
-      id: destroyec2
+    - name: Terraform ec2 Destroy  
+      id: apply 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./ec2
-      run: terraform apply -destroy -auto-approve
+      run: terraform destroy ec2-plan -auto-approve -input=false
 
   tf-destroy-ecr-s3:
     name: destroy "ecr/s3"
     runs-on: ubuntu-latest
-    needs: tf-destroy-ec2
-
-
+    #  defaults:
+    #    run:
+    #      shell: bash
+    needs: [sleep, tf-destroy-ec2]
+        
     steps:
-      # Checkout the repository to the GitHub Actions runner
-      - name: Checkout
-        uses: actions/checkout@v3
-        
-        
-      - name: Install Terraform 
-        uses: hashicorp/setup-terraform@v2
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-  
-         
-      - name: ecr/s3 plan destroy
-        id: plan_destroy_ecr_s3
-  
-        working-directory: ./ecr
-        run: terraform plan -destroy -input=false
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ecr-s3-plan
+        path: ecr-s3-plan
       
-      - name: ecr/s3 apply destroy
-        id: destroy_ecr_s3
-        working-directory: ./ecr
-        run: terraform apply -destroy -auto-approve 
+    - name: Install Terraform 
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+    
+    
+    - name: Terraform destroy
+      id: apply
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./ecr
+      run: terraform destroy -auto-approve -input=false 
