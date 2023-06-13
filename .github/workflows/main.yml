@@ -83,16 +83,17 @@ jobs:
     #  defaults:
     #    run:
     #      shell: bash
-    needs: [terraform-ecr-s3]
+    needs: terraform-ecr-s3
+    if: success()
         
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
     
-    - uses: actions/download-artifact@v2
-      with:
-        name: ecr-s3-plan
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      
       
     - name: Install Terraform 
       uses: hashicorp/setup-terraform@v2
