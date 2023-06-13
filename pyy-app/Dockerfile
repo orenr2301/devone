@@ -14,4 +14,8 @@ ENV DB_NAME="docker_db"
 EXPOSE 80
 
 CMD ["python", "app.py"]
+<<<<<<< HEAD
 ##note notes ssdd  ##
+=======
+##note notes ssss  #
+>>>>>>> 52439758d0a8401ae9ff4f888ca452b1b6241d32
