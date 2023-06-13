@@ -4,7 +4,11 @@ Prior Knowledge to gain or to have:
  - Understanding of container tech and bit Experience of how to build "Docker Images"
  - Basic or prior Terraform Experience/knowledge 
  - Good AWS architecture Understanding
- - A bit of coding/scripting knowledge/experience 
+ - A bit of coding/scripting knowledge/experience better have prior knowledge of the following languages, I'm not teaching here how to code from scratch
+-[x] Python
+-[x] NodeJS
+-[x] Bash
+-[x] HTML
 
 
 # Content
@@ -185,6 +189,6 @@ Lets make a short review of some points:
   I could've solved it alone, but it was time-consuming so I  took the help of ChatGTP
 
 
-####
+#### 
 </details> 
 
