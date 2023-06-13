@@ -267,9 +267,11 @@ EXPOSE 80
 
 CMD ["node", "app.js"]
 ~~~
+</details>
+
 
 ### Python Dockerfile
-
+<details><summary>SHOW</summary>
 
 ~~~bash
 FROM python:3.9
@@ -290,3 +292,4 @@ EXPOSE 80
 CMD ["python", "app.py"]
 ~~~
 
+</details>
