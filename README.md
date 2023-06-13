@@ -116,8 +116,8 @@ A few notes here:
 * Note - since I'm not doing think in NodeJS I took the final absolute code from ChatGTP (Im not familiar with nodeJS that good)
 
 
-Our Goal Here is to create a nodejs app that connects to MongoDB container and fetch certain data
-### NodeJS APP 
+Our Goal Here is to create a nodejs app that connects to MongoDB container and fetches certain data
+### NodeJS app
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/f3972ef1-27a4-4dbc-b11d-7cb9ddbeee54)
 
@@ -170,12 +170,16 @@ app.listen(port, '0.0.0.0', ()=> {
 });
 ```
 
-Lets make a short review in points: 
+Lets make a short review of some points: 
 
 
-* We are using two modules here: express and mongo
+* We are using two modules here: express and Mongo
 * Express is the web page html module, its minimal and
-* mongo which helps us connect to mongodb database
+* mongo which helps us connect to Mongodb database
+* This code is taken from ChatGPT since I'm not usually coding with nodejs.
 
+  I was able to learn and write the code by myself for it, but I had some syntax issues, that alone prevented me to get what I wanted.
+
+  I could've solved it alone, but it was time-consuming so i took the help of ChatGTP 
 </details> 
 
