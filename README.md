@@ -113,7 +113,7 @@ A few notes here:
 
 ## Building Application Code
 * [NodeJS app](#NodeJS-app)
-* [python app](#python-app)
+* [Python app](#Python-app)
 
  <details><summary>SHOW</summary>
 
@@ -187,8 +187,49 @@ Lets make a short review of some points:
   I was able to learn and write the code by myself for it, but I had some syntax issues, that alone prevented me to get what I wanted.
 
   I could've solved it alone, but it was time-consuming so I  took the help of ChatGTP
+ 
+</details>
+
+### Python app
+
+* Since im more fammiliar with python and work with it more often, obviously i will feel more comfortable with it.
+
+  SoIi took all the NodeJS code and Converted it to python to reflect same action and wanted outcome, and also for just in case the NodeJS app wont work.
+
+* This Time we are using flask and pymongo modules, ChatGPT was not involved this time
+
+  
+  ```python
+ffrom flask import Flask
+from pymongo import MongoClient
+
+app = Flask(__name__)
+port = 80
+url = "mongodb://admin:admin@mongodb:27017"
+db_name = "docker_db"
+
+@app.route("/")
+def get_apples_quantity():
+   
+    client = MongoClient(url)
+    db = client[db_name]
+    collection = db["fruits"]
+
+   
+    result = collection.find_one({"name": "apples"})
+
+    
+    apples_qty = result["qty"] if result else "N/A"
+    html = f"<h1>Quantity of Apples: {apples_qty}</h1>"
+
+    client.close()
+
+    return html
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=port)
+
+```
 
 
-#### 
-</details> 
 
