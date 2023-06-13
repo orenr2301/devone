@@ -113,11 +113,13 @@ A few notes here:
 
  <details><summary>SHOW</summary>
 
+### NodeJS app
+
+
 * Note - since I'm not doing think in NodeJS I took the final absolute code from ChatGTP (Im not familiar with nodeJS that good)
 
+ Our Goal Here is to create a nodejs app that connects to MongoDB container and fetches apples quantity
 
-Our Goal Here is to create a nodejs app that connects to MongoDB container and fetches certain data
-### NodeJS app
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/f3972ef1-27a4-4dbc-b11d-7cb9ddbeee54)
 
@@ -175,11 +177,14 @@ Lets make a short review of some points:
 
 * We are using two modules here: express and Mongo
 * Express is the web page html module, its minimal and
-* mongo which helps us connect to Mongodb database
+* mongo which helps us connect to MongoDB database
 * This code is taken from ChatGPT since I'm not usually coding with nodejs.
 
   I was able to learn and write the code by myself for it, but I had some syntax issues, that alone prevented me to get what I wanted.
 
-  I could've solved it alone, but it was time-consuming so i took the help of ChatGTP 
+  I could've solved it alone, but it was time-consuming so I  took the help of ChatGTP
+
+
+####
 </details> 
 
