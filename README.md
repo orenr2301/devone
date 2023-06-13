@@ -199,8 +199,8 @@ Lets make a short review of some points:
 * This Time we are using flask and pymongo modules, ChatGPT was not involved this time
 
   
-  ```python
-ffrom flask import Flask
+```python
+from flask import Flask
 from pymongo import MongoClient
 
 app = Flask(__name__)
