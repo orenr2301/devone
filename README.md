@@ -191,7 +191,7 @@ Lets make a short review of some points:
 </details>
 
 ### Python app
-
+<details><summary>SHOW</summary>
 * Since im more fammiliar with python and work with it more often, obviously i will feel more comfortable with it.
 
   SoIi took all the NodeJS code and Converted it to python to reflect same action and wanted outcome, and also for just in case the NodeJS app wont work.
@@ -236,4 +236,35 @@ if __name__ == "__main__":
   ~~~bash
    url = "mongodb://admin:admin@mongodb:27017"
   ~~~
+</details>
+
+
+## Containerize App
+* [NodeJS Doockerfile](#[NodeJS-Doockerfile)
+* [Python Dockerfile](#Python-Dockerfile)
+
+
+
+For our CI/CD purposes we want to containerize the application in order to fast deploy. I'm Assuming you are already familiar with Docker file, and image build
+
+### NodeJS Doockerfile
+
+
+Below NodeJS Docker file
+
+~~~bash
+FROM node:14
+
+WORKDIR /app
+
+COPY package.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 80
+
+CMD ["node", "app.js"]
+~~~ 
 
