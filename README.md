@@ -10,7 +10,7 @@ Prior Knowledge to gain or to have:
 # Content
 **[1. Hello, Nice to meet you](#heading-1)**
 * [Introduction](#Introduction)  
-* [Design & Prerequisites](#Design-&-Prerequisites)    
+* [Design and Prerequisites](#Design-and-Prerequisites)    
 * [Let's Start](#let's-start)  
 
 ## Welcome 
@@ -40,12 +40,12 @@ From code to opeartion.
 
 I'm here to guide you through, step by step
 for Deploying a Simple full CI/CD pipeline, which includes hot topic techs . . .
-And most industry standard tools out there. 
+And most industry-standard tools out there. 
 
 </details> 
 
 
-# Design & Prerequisites 
+# Design and Prerequisites 
 * [Design](#Design)
 * [Prerequisits](#Prerequisites)
 
