@@ -14,4 +14,4 @@ ENV DB_NAME="docker_db"
 EXPOSE 80
 
 CMD ["python", "app.py"]
-##noste noed ssdd  ##
+##nosdte noed ssdd  ##
