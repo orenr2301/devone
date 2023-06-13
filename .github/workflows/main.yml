@@ -66,7 +66,12 @@ jobs:
      working-directory: ./ecr
      run: |
        terraform apply -auto-approve -input=false
-       terraform plan -destroy -out=ecr-s3-plan
+       terraform plan -destroy -out ecr-s3-plan
+
+   - uses: actions/upload-artifact@v3
+     with:
+      name: ecr_s3-plan
+      path: ./ecr/ecr_s3-plan-art
        
 
  
@@ -179,6 +184,11 @@ jobs:
       run: |
         terraform apply -auto-approve -input=false
         terraform plan -destroy -out=ec2-plan
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ec2-plan
+        path: ./ec2/ec2-plan-art
   
   alb:
     name: deploy alb
@@ -214,7 +224,12 @@ jobs:
       working-directory: ./alb
       run: |
         terraform apply -auto-approve -input=false
-        terraform plan -destroy -out=alb-plan
+        terraform plan -destroy -out alb-plan
+    
+    - uses: actions/upload-artifact@v3
+      with:
+        name: alb-plan
+        path: ./alb/alb-plan-art
 
 
   sleep:
@@ -244,10 +259,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/download-artifact@v2
       with:
         name: alb-plan
-        path: alb-plan
 
   
     - name: Terraform alb destroy  
@@ -268,10 +282,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/download-artifact@v2
       with:
-        name: ec2-plan
-        path: ec2-plan
+        name: my-artifact
           
           
     - name: Install Terraform 
@@ -301,10 +314,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     
-    - uses: actions/upload-artifact@v3
+    - uses: actions/download-artifact@v2
       with:
-        name: ecr-s3-plan
-        path: ecr-s3-plan
+        name: ecr_s3-plan
       
     - name: Install Terraform 
       uses: hashicorp/setup-terraform@v2
