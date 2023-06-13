@@ -40,8 +40,7 @@ jobs:
      
    - name: Install Terraform 
      uses: hashicorp/setup-terraform@v2
-     with:
-      cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+     
    
    - name:  Terraorm ecr/s3 init
      id: init
