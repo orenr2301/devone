@@ -8,10 +8,10 @@ Prior Knowledge to gain or to have:
 
 
 # Content
-**[1. Hello, Nice to meet you](#heading-1)**
+**[1.Welcome Aboard](#Welcome-Aboard)**
 * [Introduction](#Introduction)  
 * [Design and Prerequisites](#Design-and-Prerequisites)    
-* [Let's Start](#let's-start)  
+* [Code your app](#Code-your-app)  
 
 ## Welcome 
 
@@ -80,16 +80,102 @@ We Need to perform the following:
 
    1.2 Download aws-cli to your pc
 2. Visual Studio Code
-3. Githab Account
-4. Terraform Cli - You would like to test Terraform from your local machine to check your code   
-5. Coffee and something to eat Next To You. 
 
-
-
-
-   
-
-
-
+   2.1 Installed code runtime in order to local machine to  compile our code for test purposes
+    2.2 Add interpreterss to  local machine PATH environmentt  
+4. Githab Account
+5. Terraform Cli - You would like to test Terraform from your local machine to check your code   
+6. Coffee and something to eat Next To You. 
 
 </details> 
+
+
+
+
+# Code your app
+
+* [Building Application Code](#Building-Application-Code)
+* [Containerize App](#Containerize-App)
+* [Compose full app](#Compose-full-app)
+
+A few notes here:
+
+  - Make sure to have already cloned git-repository to your local machine
+  - We will push our code to preserve our code
+  - In this section, we will write the code with NodeJS and Python
+  - Make sure to have Python and NodeJs runtimes already installed on your computer
+  - Feel Free to download any extension you think is necessary for you for work
+
+
+## Building Application Code
+* [NodeJS app](#NodeJS-app)
+* [python app](#python-app)
+
+ <details><summary>SHOW</summary>
+
+* Note - since I'm not doing think in NodeJS I took the final absolute code from ChatGTP (Im not familiar with nodeJS that good)
+
+
+Our Goal Here is to create a nodejs app that connects to MongoDB container and fetch certain data
+### NodeJS APP 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/f3972ef1-27a4-4dbc-b11d-7cb9ddbeee54)
+
+```javascript
+const express = require('express');
+const MongoClient = require('mongodb').MongoClient;
+
+const app = express();
+const port = 80;
+
+// MongoDB connection URL
+const url = 'mongodb://admin:admin@mongodb:27017';
+// Database name
+const dbName = 'docker_db';
+
+app.get('/', (req, res) => {
+  // Connect to MongoDB
+  MongoClient.connect(url, (err, client) => {
+    if (err) {
+      console.error('Error connecting to MongoDB:', err);
+      res.send('Error connecting to MongoDB');
+      return;
+    }
+
+    // Access the "fruits" collection
+    const db = client.db(dbName);
+    const collection = db.collection('fruits');
+
+    // Find the document with name "apples"
+    collection.findOne({ name: 'apples' }, (err, result) => {
+      if (err) {
+        console.error('Error querying MongoDB:', err);
+        res.send('Error querying MongoDB');
+        return;
+      }
+
+      // Display the quantity of apples in HTML
+      const applesQty = result ? result.qty : 'N/A';
+      const html = `<h1>Quantity of Apples: ${applesQty}</h1>`;
+      res.send(html);
+
+      // Close the MongoDB connection gp
+      client.close();
+    });
+  });
+});
+
+app.listen(port, '0.0.0.0', ()=> {
+  console.log(`App listening at http://localhost:${port}`);
+});
+```
+
+Lets make a short review in points: 
+
+
+* We are using two modules here: express and mongo
+* Express is the web page html module, its minimal and
+* mongo which helps us connect to mongodb database
+
+</details> 
+
