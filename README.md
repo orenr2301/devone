@@ -26,7 +26,7 @@ Prior Knowledge to gain or to have:
   * [The Power of Github](#The-Power-Of-Github)
     * [Github Pull Request](#Github-Pull-Request)
     * [Github Actions](#Github-Actions)
-  * [Ready Set Go CI/CD](#Ready-Set-Go-CI/CD)
+  * [Ready Set Go CI CD](#Ready-Set-Go-CI-CD)
     
 
 ## Welcome 
@@ -1617,12 +1617,65 @@ jobs:
 
 
 
-# Ready Set Go CI/CD
+# Ready Set Go CI CD
 
 
 OK, Now the final stage of the deployment, 
 
 After creating a change I pushed, created a pull request and letting the workflow to run triggered based on the pull request
+
+## Workflow Triggered by pull request 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/68f495d2-71b0-43d8-9965-4174c5748de2)
+
+## Workflow Finished Successfully at all stages 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/74e2c658-b5f0-432d-832d-55857ed77651)
+
+
+## ECR Repository 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/3732db81-7022-4bb5-9fa6-5645520689a2)
+
+
+### ECR Repository with the built image 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/862b3b3e-9101-408a-8f0a-bb16a2fea4a1)
+
+
+## S3 Bucket 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/d00afcc5-749b-4c69-a773-f9e8c052bccb)
+
+
+### S3 uploaded files
+
+![image](https://github.com/orenr2301/devone/assets/117763723/e49f2e9d-afe8-4ddc-9b5b-706a9bfa6870)
+
+
+## EC2 Instance 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/f39cf002-befb-44e8-81cc-d615b9738ab7)
+
+
+## ALB 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/2e378aa5-2e09-4013-b720-cef503395239)
+
+
+### ALB Target Group
+
+![image](https://github.com/orenr2301/devone/assets/117763723/6d247cde-0607-42b0-89ad-57fd669ca22f)
+
+
+### EC2 and ALB Securiy Groups
+
+
+![image](https://github.com/orenr2301/devone/assets/117763723/829641e4-2eba-4dda-ae26-92bed97da0ca)
+
+
+
+
 
 
 
