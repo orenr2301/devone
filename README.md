@@ -968,6 +968,8 @@ s3_name = "you-bucket-name"
 
 ### Terraform ALB
 
+<details><summary>ALB Short Information and Methods</summary>
+ 
 As many infrastructures are maintained the desired state of having a High Availability in their Environment, and also to load balance between user requests and traffic, in most cloud providers we will use a LoadBalancer component to achieve this.
 
 Also, Load Balancer can be used at the infrastructure edge point to the public, to get user requests from outside and to separate and decouple specific terms of traffic to specific targets inside your LAN 
@@ -987,6 +989,7 @@ In that case, the workload will go by 50% of traffic to each server
 
 In My case here I was using LoadBlancer for one ec2 instance behind, which isn't that needed since I'm using only 1 instance and the load balancer in aws requires to be in 2 separate subnets for the HA. (But LoadBlancing and EC2 runtime cost money so I was going for the required minimum for it to still work)
 
+</details>
 
 * [alb main tf](#alb-main-tf)
 * [alb sg tf](#alb-sg-tf)
