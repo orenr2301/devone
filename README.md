@@ -1303,22 +1303,24 @@ Some Checks to make:
 5. Make changes necessary change to your code and then commit and push
  
 6.
+   ```
    1. Git add 
     
- ``` git add . ```
+ #### git add . 
 
-     can be a  specific file
+     Can be a  specific file
 
-  ``` git add my-file.txt ```
+ #### git add my-file.txt 
   
 
     2. Git commit
        
- ``` git commit -m "changed code for prod ```
+ #### git commit -m "changed code for prod 
 
     3. Push your code
        
- ``` git push -u origin new-branch-name ```
+ #### git push -u origin new-branch-name
+ ```  
 
  7. After Push if you go into your GitHub repository you will see that a pull and merge request is waiting:
 
