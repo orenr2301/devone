@@ -821,9 +821,9 @@ docker-compose up -d
 ### Terraform ECR S3
 <details><summary>SHOW</summary>
 
- * [ecr-main.tf](#ecr-main.tf) 
- * [variables.tf](#variables.tf)
- * [vairables.auto.tfvars](#vairables.auto.tfvars)
+ * [ecr s3 main.tf](#ecr-s3-main.tf) 
+ * [ecr s3 variables.tf](#ecr-s3-variables.tf)
+ * [ecr s3 variables.auto.tfvars](#ecr-s3-variables.auto.tfvars)
 
 
 Since we  built the app, in a way, that we will need to deploy it via containers, i need a place to store them. As  i dont have a proper way to upload all files to built from them and do everything on ec2 machine at startup.
@@ -839,7 +839,7 @@ I could also make a predefined bash script  deliver to s3 and download from s3 a
 Easy sometimes and be very boaring and not out of the box. A DevOps guy must think out of the box to accomplish new solutions to complex situations.
 
 
-#### ecr-main.tf
+#### ecr s3 main.tf
 
 Short Overview:
 
@@ -900,7 +900,7 @@ resource "aws_s3_bucket" "octo_s3" {
 
 ```
 
-#### variables.tf
+#### ecr s3 variables.tf
 
 Short Overview:
 
@@ -943,7 +943,7 @@ variable "s3_name" {
 
 ```
 
-#### vairables.auto.tfvars
+#### ecr s3 variables.auto.tfvars
 
 Short Overview:
 
