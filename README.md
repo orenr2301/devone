@@ -827,17 +827,17 @@ docker-compose up -d
 <details><summary>SHOW</summary>
 
 
-Since we  built the app, in a way, that we will need to deploy it via containers, i need a place to store them. As  i dont have a proper way to upload all files to built from them and do everything on ec2 machine at startup.
+Since we built the app, in a way, that we will need to deploy it via containers, I need a place to store them. As I don't have a proper way to upload all files to build from them and do everything on the ec2 machine at startup.
 
-I need to make sure user dtata is not exceeding 64KB therefore my user-data script must be relativitely short and to the point. 
+I need to make sure user data is not exceeding 64KB therefore my user data script must be relatively short and to the point. 
 
-I could have done this with with uploading all filed to S3 and then copy files to machine, but than i would need to built images, switch directories, make sure each file in place and etc.
+I could have done this by uploading all files to S3 and then copying files to the machine, but then I would need to build images, switch directories, make sure each file was in place and etc.
 
-To much Work and and pre ready images are doing the work just fine.
+To much Work and pre-ready images are doing the work just fine.
 
-I could also make a predefined bash script  deliver to s3 and download from s3 and execute on server, but Hey . . . If we have a chance to deal and play with other component and develop our skill, then why not.
+I could also make a predefined bash script deliver to s3 and download from s3 and execute on the server, but Hey . . . If we have a chance to deal and play with other components and develop our skills, then why not.
 
-Easy sometimes and be very boaring and not out of the box. A DevOps guy must think out of the box to accomplish new solutions to complex situations.
+Easy sometimes and be very boring and not out of the box. A DevOps guy must think out of the box to accomplish new solutions to complex situations.
 
 
 #### ecr s3 main tf
@@ -965,3 +965,275 @@ s3_name = "you-bucket-name"
 ````
 
 </details>
+
+
+### Terraform ALB
+
+As many infrastructures are maintained the desired state of having a High Availability in their Environment, and also to load balance between user requests and traffic, in most cloud providers we will use a LoadBalancer component to achieve this.
+
+Also, Load Balancer can be used at the infrastructure edge point to the public, to get user requests from outside and to separate and decouple specific terms of traffic to specific targets inside your LAN 
+
+A good example of a LoadBalancer to get public request is:
+
+Assuming you are having on-prem bare metal Kubernetes cluster, So in order to get public requests we will use Metallb to provide us the ability to load balance requests from public 
+
+An example of a LoadBalancer to achieve High Availability:
+
+Let's assume we are having 3 Servers that are serving the same application or handling the same kind of requests.
+The LoadBalancer delivers the same workload to each server 33% each. 
+
+Suddenly one of the servers goes down, but the other 2 are there to keep the application alive and deliver the intended service
+In that case, the workload will go by 50% of traffic to each server 
+
+
+In My case here I was using LoadBlancer for one ec2 instance behind, which isn't that needed since I'm using only 1 instance and the load balancer in aws requires to be in 2 separate subnets for the HA. (But LoadBlancing and EC2 runtime cost money so i was going for required minimum for it to still work)
+
+
+* [alb main tf](#alb-main-tf)
+* [alb sg tf](#alb-sg-tf)
+* [alb variables tf](#alb-variables-tf)
+* [alb outputs data tf](#alb-outputs-data-tf)
+
+
+<details><summary>SHOW</summary>
+
+#### alb main tf
+
+Short Overview:
+
+:basketball: Creating ALB target Group - ALB needs to know which group of ec2 he needs to be pointed/attached to and in which port to deliver requests
+
+:basketball: Creating ALB - must have 2 subnets minimum
+
+:basketball: Defining the type of the LoadBalancer
+
+
+```hcl
+terraform {
+    required_providers {
+        aws = {
+            source = "hashicorp/aws"
+            version = "~> 3.0"
+        }
+    }
+}
+
+
+provider "aws" {
+    access_key = var.aws_access_key
+    secret_key = var.aws_secret_key
+    region = "your-region"
+    profile = "default"
+}
+
+
+
+resource "aws_lb_target_group" "octo-target-group" {
+     health_check {
+    interval            = 10
+    path                = "/"
+    protocol            = "HTTP"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "my-test-tg"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id = "${data.aws_vpc.default_octo.id}"
+
+}
+
+
+resource "aws_lb_target_group_attachment" "octo-alb-tg-attach" {
+
+    target_group_arn = "${aws_lb_target_group.octo-target-group.arn}"
+    target_id = "${data.aws_instance.ec2-octo-instances.id}"
+    port = 80
+}
+
+resource "aws_lb" "octo-aws-lb" {
+    name = "octo-alb"
+    internal = false
+
+    security_groups = [
+        "${aws_security_group.octo-lb-sg.id}",
+    ]
+
+
+    subnets = [ 
+        local.subnet_1,
+        local.subnet_2
+     ]
+
+
+    tags = {
+      Name = "octo-task-alb"
+    }
+
+    ip_address_type = "ipv4"
+    load_balancer_type = "application"
+}
+
+```
+
+
+#### alb sg tf
+
+Short Overview:
+
+:basketball: ALB as well requires with Security group - Important note: make sure to have sg anywhere possible in term of security measurments 
+
+:basketball: Creating ALB Security Grouop and type of traffic to listen and action
+
+:basketball: Defining the inboud and outbound rules
+
+```hcl
+resource aws_security_group "octo-lb-sg" {
+    name = "octo-alb-task-sg"
+    vpc_id = "${data.aws_vpc.default_octo.id}"
+}
+
+
+resource "aws_security_group_rule" "octo-in-http" {
+    from_port = 80
+    protocol = "tcp"
+    security_group_id = "${aws_security_group.octo-lb-sg.id}"
+    to_port = 80
+    type = "ingress"
+    cidr_blocks = ["0.0.0.0/0"]
+  
+}
+
+resource "aws_security_group_rule" "octo-out-all" {
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+    security_group_id = "${aws_security_group.octo-lb-sg.id}"
+    type = "egress"
+    cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_lb_listener" "octo-alb-listener" {
+    load_balancer_arn = "${aws_lb.octo-aws-lb.arn}"
+    port = 80
+    protocol = "HTTP"
+
+    default_action {
+        type = "forward"
+        target_group_arn = "${aws_lb_target_group.octo-target-group.arn}"
+    }
+  
+}
+```
+
+#### alb variables tf
+
+Short Overview:
+
+:basketball: Defining our variables ALB provider login and access
+
+```hcl
+variable "aws_access_key" {
+    description = "AWS access key"
+    type = string
+    default = null
+}
+
+variable "aws_secret_key" {
+    description =  "AWS secret key"
+    type = string
+    default = null
+}
+
+variable "aws_region" {
+    description = "AWS region"
+    type = string
+    default = "your region" 
+}
+
+  
+}
+```
+
+#### alb outputs data tf
+
+Short Overview: 
+
+:basketball: In here i was playing and manipulating with data sources to get specific data
+
+:basketball: I was needing with the output of data source to be used as a variable data to alb resource
+
+:basketball: I was using local vars to save output data and use it in alb resource, i've also sorted it to get the first and second subnet of the region 
+each region has availability zone and each avialaibility zone has its own default subnet
+
+![image](https://github.com/orenr2301/devone/assets/117763723/e4d74106-e740-4e91-b760-d853f0071656)
+
+```hcl
+variable "vpc_id" {
+  default = null
+}
+
+data "aws_vpc"  "default_octo" {
+  id = var.vpc_id
+  
+}
+
+
+output "vpc_id_default" {
+  value = data.aws_vpc.default_octo.id
+  
+}
+
+
+variable "ec2-id" {
+    default = null
+}
+
+data "aws_instance" "ec2-octo-instances" {
+    instance_id = var.ec2-id
+    filter {
+      name = "tag:Name"
+      values = [ "octopus-vm" ]
+      }
+    }
+    
+
+output "vpc_ec2_id" {
+    value =  data.aws_instance.ec2-octo-instances.id
+}
+
+
+
+data "aws_subnets" "octo-all" {
+  filter {
+    name = "vpc-id"
+    values = [data.aws_vpc.default_octo.id]
+  }
+}
+
+
+output "first_subnet_id" {
+  value = sort(data.aws_subnets.octo-all.ids)[2]  
+}
+
+output "second_subnet_id" {
+  value = sort(data.aws_subnets.octo-all.ids)[1] 
+  
+}
+
+
+
+locals {
+   subnet_1 = sort(data.aws_subnets.octo-all.ids)[2]
+   subnet_2 = sort(data.aws_subnets.octo-all.ids)[1]
+}
+
+```
+
+</details>
+
+
+
