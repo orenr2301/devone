@@ -64,9 +64,16 @@ jobs:
        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
      working-directory: ./ecr
-     run: terraform apply -auto-approve -input=false
+     run: |
+       terraform apply -auto-approve -input=false
+       terraform plan -destroy -out /tmp/ecr_s3.tfplan
 
- 
+   - uses: actions/upload-artifact@v3
+     with:
+      name: ecr-tfplan
+      path: /tmp/ecr_s3.tfplan
+       
+
   build-image:
     name: "build and push"
     runs-on: ubuntu-latest
@@ -208,3 +215,39 @@ jobs:
         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       working-directory: ./alb
       run: terraform apply -auto-approve -input=false
+
+
+
+  tf-destroy-ecr-s3:
+    name: destroy "ecr/s3"
+    runs-on: ubuntu-latest
+    #  defaults:
+    #    run:
+    #      shell: bash
+    needs: terraform-ecr-s3
+    if: success()
+        
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+     
+      
+      
+    - name: Install Terraform 
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+    
+    
+    - name: Terraform destroy
+      id: apply
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./ecr
+      run: terraform apply ecr-tfplan
+
