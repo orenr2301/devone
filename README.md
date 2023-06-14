@@ -13,9 +13,13 @@ Prior Knowledge to gain or to have:
 
 # Content
 **[1.Welcome Aboard](#Welcome-Aboard)**
-* [Introduction](#Introduction)  
-* [Design and Prerequisites](#Design-and-Prerequisites)    
-* [Code your app](#Code-your-app)  
+  * [Introduction](#Introduction)  
+  * [Design and Prerequisites](#Design-and-Prerequisites)    
+**[2.Application](#Application)
+  *[Code your app](#Code-your-app)
+**[3.Build The Infrastructure](#Build-The-Infrastructure)
+  *[IaC with Terraform](#IaC-With-Terraform)
+    
 
 ## Welcome 
 
@@ -379,3 +383,16 @@ networks:
       external: true
 ~~~
 </details>
+
+# Build The Infrastructure
+
+In Order to Complete my CI/CD flow i had to decide where to deploy my app.
+
+To achive this i needed a way to fast deploy the infrustucture to host my app and also a way to be able to reach my app without manually building it.
+
+For that Purpose picked up Terraform as my IaC, other tools to that can perform IaC are Ansible,AWS CloudFormation, Pulumi, Chef, Saltstack(Common in Openstack environments), Puppet and etc.
+
+## IaC with Terraform
+:basketball: hello
+
+
