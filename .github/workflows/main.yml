@@ -92,7 +92,7 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: devone
         IMAGE_TAG_JS: octo-nodejs
-      working-directory: ./node-app
+      working-directory: ./pyy-app
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS
@@ -125,8 +125,8 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: devone
-        IMAGE_TAG_JS: octo-nodejs
-      working-directory: ./node-app/compose-app
+        IMAGE_TAG_JS: octo-python
+      working-directory: ./pyy-app/compose-app
       run: |
         sed -i  "0,/image:/ s/image:.*/image: $ECR_REGISTRY\/$ECR_REPOSITORY:$IMAGE_TAG_JS/" docker-compose.yaml
         aws s3 cp docker-compose.yaml s3://octo-oren-bucket
