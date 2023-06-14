@@ -403,24 +403,32 @@ Here where the part of the fun begins.
 With Terraform I was able to provision my infrastucture as code to lay down the ground with the compomnents to help me achieve my goal.
 
 The Componenets/Services that im going to provision are:
+
 :diamond_shape_with_a_dot_inside: EC2 instance
+
 :diamond_shape_with_a_dot_inside: ECR (:small_blue_diamond: Elastic Container Regisry)
+
 :diamond_shape_with_a_dot_inside: S3 Bucket
+
 :diamond_shape_with_a_dot_inside: ALB (:small_blue_diamond: Application Load Balancer)
 
+
 Now lets decouple each components to be explained shortly.
+
 :sparkler: I wont explain each method of  what it's doing. Im assuming you are pretty less or more how to play with terraform well enough to understand what im doing :sparkler:
 
-*[Terraform EC2](#Terraform-EC2)
-*[Terraform ECR](#Terraform-ECR)
-*[Terraform S3](#Terraform-S3)
-*[Terraform ALB](#Terraform-ALB)
+
+* [Terraform EC2](#Terraform-EC2)
+* [Terraform ECR](#Terraform-ECR)
+* [Terraform S3](#Terraform-S3)
+* [Terraform ALB](#Terraform-ALB)
 
 
 
 ### Terraform EC2
 <details><summary>SHOW</summary>
 
+ 
  * [ec2-main.tf](#ec2-main.tf)
  * [ec2-sg.tf](#ec2-sg.tf)
  * [variables.tf](#variables.tf)
