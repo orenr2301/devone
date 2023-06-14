@@ -1257,7 +1257,7 @@ Then it is now the time to automate for real. . .
 
 <a href="https://www.youtube.com/watch?v=3RjQznt-8kE&list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR
 " target="_blank"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxIYGSVs7d3C-Hv_2rGg_sh72iCYsUwNbuJg&usqp=CAU" 
-alt="Click Me To Learn Git Better" width="300" height="120" border="10" /></a>
+alt="Click Me To Learn Git Better" width="400" height="120" border="10" /></a>
 
 | Click On Picture To Lean Git Better |
 |-------------------------------------|
