@@ -1256,5 +1256,5 @@ Then it is now the time to automate for real. . .
 :no_entry_sign: If not yet familiar with git then Stop reading and refer to below:  :point_left:
 
 <a href="https://www.youtube.com/watch?v=3RjQznt-8kE&list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR
-" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+" target="_blank"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxIYGSVs7d3C-Hv_2rGg_sh72iCYsUwNbuJg&usqp=CAU" 
+alt="Click Me To Learn Git Better" width="240" height="180" border="10" /></a>
