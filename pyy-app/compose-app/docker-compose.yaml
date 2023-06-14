@@ -3,11 +3,11 @@ version: "3.8"
 services:
   app:
     container_name: py-app
-    image: octo:3
+    image: pyapp:1
     ports:
     - 80:80
     networks:
-    - my_network
+    - octo_network
 
   mongodb:
     container_name: mongodb
@@ -15,16 +15,15 @@ services:
     ports:
     - 27017:27017
     restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
     volumes:
-      #- mongoDB:/data/db
     - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
     networks:
-    - my_network
+    - octo_network
 
-
-      #volumes:
-      #mongoDB: {}
 
 networks:
-  my_network:
+  octo_network:
       external: true
