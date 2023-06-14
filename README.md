@@ -963,7 +963,6 @@ image_mutability = "IMMUTABLE"
 
 s3_name = "you-bucket-name"
 ````
-
 </details>
 
 
@@ -986,7 +985,7 @@ Suddenly one of the servers goes down, but the other 2 are there to keep the app
 In that case, the workload will go by 50% of traffic to each server 
 
 
-In My case here I was using LoadBlancer for one ec2 instance behind, which isn't that needed since I'm using only 1 instance and the load balancer in aws requires to be in 2 separate subnets for the HA. (But LoadBlancing and EC2 runtime cost money so i was going for required minimum for it to still work)
+In My case here I was using LoadBlancer for one ec2 instance behind, which isn't that needed since I'm using only 1 instance and the load balancer in aws requires to be in 2 separate subnets for the HA. (But LoadBlancing and EC2 runtime cost money so I was going for the required minimum for it to still work)
 
 
 * [alb main tf](#alb-main-tf)
