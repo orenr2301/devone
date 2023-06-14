@@ -1303,7 +1303,8 @@ Some Checks to make:
 5. Make changes necessary change to your code and then commit and push
  
 6.
-   ```
+
+```
  #### 1. Git add 
     
      git add . 
