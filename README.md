@@ -303,7 +303,7 @@ CMD ["python", "app.py"]
 
 * [Nodejs Docker compose](#Nodejs-Docker-compose)
 * [Python Docker compose](#Python-Docker-compose)
-
+<details><summary>SHOW</summary>
 After building the wanted images, we would like to make a single run to deploy our app with mongo image to be our databse which will host our data to be fetched from the nodejs application be built earlier.
 
 Remeber we built only the app. for the mongodb container we will have a container which we will insert the data with js init file.
@@ -378,3 +378,4 @@ networks:
   my_network:
       external: true
 ~~~
+</details>
