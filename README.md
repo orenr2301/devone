@@ -1,4 +1,4 @@
-# DevOne - Build your containerized app with Terraform GitHub Actions and AWS 
+![image](https://github.com/orenr2301/devone/assets/117763723/e15fe25b-5bd8-443a-af04-36b9dea53575)# DevOne - Build your containerized app with Terraform GitHub Actions and AWS 
 Prior Knowledge to gain or to have:
 
  - Understanding of container tech and bit Experience of how to build "Docker Images"
@@ -1357,6 +1357,261 @@ If you made changes then you will be able also to review and leaves comment
 </details>
 
    
+## Github Actions
+
+Well Well here we are after doing the git stuff we can now run our deployments
+
+
+- GitHub Actions Are allowing us to perform a CI process and a CD processes
+- With GitHub action, we can take our code and elevate it to be executed automatically without doing anything manual
+- With GitHub action, the only thing you need to do, is deal with your code, commit, and push changes
+
+### Let's Create Our Git Action workflow 
+
+We need a few things for it to work:
+
+:small_blue_diamond: Something to run our terraform code
+
+:small_blue_diamond: Build and design Jobs and steps
+
+:small_blue_diamond: Make an order run 
+
+:small_blue_diamond: Making test (I didn't do it since I was lacking time so I decided to skip it this time )
+
+:small_blue_diamond: Triggers - On what condition to trigger the Workflow 
+
+:small_blue_diamond: Make sure your AWS Credentials are set in under branch Setting -> Secrets and Variables --> Actions and then create your secret
+
+
+#### Triggering based on push or pull request: 
+
+![image](https://github.com/orenr2301/devone/assets/117763723/fe7fe767-40eb-47ba-a1c1-7b56d85e9b38)
+
+
+## See below the full WorkFlow 
+
+```
+name: 'Terraform deploy'
+
+on:
+  push:
+    branches:
+    - main
+    paths: 
+    - alb/**
+    - ec2/**
+    - ecr/**
+    - node-app/**
+    - pyy-app/**
+  pull_request:
+    branches:
+    - main
+    paths: 
+    - alb/**
+    - ec2/**
+    - ecr/**
+    - node-app/**
+    - pyy-app/**
+
+permissions:
+     contents: read
+     pull-requests: write
+    
+jobs:
+  terraform-ecr-s3:
+   name: "ecr/s3"
+   runs-on: ubuntu-latest
+   defaults:
+      run:
+       shell: bash
+       
+   steps:
+  
+   - name: Checkout
+     uses: actions/checkout@v3
+     
+     
+   - name: Install Terraform 
+     uses: hashicorp/setup-terraform@v2
+     
    
+   - name:  Terraorm ecr/s3 init
+     id: init
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+     working-directory: ./ecr
+     run: terraform init
+     
+   - name: Terraform ecr/s3 plan
+     id: plan 
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+     working-directory: ./ecr
+     run: terraform plan -input=false
+  
+   - name: Terraform apply
+     id: apply
+     env: 
+       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+     working-directory: ./ecr
+     run: |
+       terraform apply -auto-approve -input=false
+       terraform plan -destroy -out /tmp/ecr_s3.tfplan
+
+   - uses: actions/upload-artifact@v3
+     with:
+      name: ecr-tfplan
+      path: /tmp/ecr_s3.tfplan
+       
+
+  build-image:
+    name: "build and push"
+    runs-on: ubuntu-latest
+    needs: terraform-ecr-s3
+    
+    steps:
+    
+    - name: Checkout build
+      uses: actions/checkout@v3
+      
+      
+    - name: Configs AWS crdentails 
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        aws-region: eu-central-1
+    
+    - name: login to ecr
+      id: login-ecr 
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build Tag and push images to Amazon ECR 
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: devone
+        IMAGE_TAG_JS: octo-nodejs
+      working-directory: ./node-app
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_JS
+  
+  change-content:
+    name: deploy to s3
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    needs: [terraform-ecr-s3, build-image]
+
+    steps:
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Configs AWS crdentails 
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        aws-region: eu-central-1
+    
+    - name: login to ecr
+      id: login-ecr 
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: changing image names in docker-compose
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: devone
+        IMAGE_TAG_JS: octo-nodejs
+      working-directory: ./node-app/compose-app
+      run: |
+        sed -i  "0,/image:/ s/image:.*/image: $ECR_REGISTRY\/$ECR_REPOSITORY:$IMAGE_TAG_JS/" docker-compose.yaml
+        aws s3 cp docker-compose.yaml s3://octo-oren-bucket
+        aws s3 cp mongo-init.js s3://octo-oren-bucket
+            
+        
+  ec2:
+    name: deploy ec2 instance
+    runs-on: ubuntu-latest
+    needs: [change-content]
+
+    steps:
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+         
+         
+    - name: Install Terraform 
+      uses: hashicorp/setup-terraform@v2
+      with:
+         terraform_wrapper: false
+
+    - name:  Terraorm ec2 init
+      id: init
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./ec2
+      run: terraform init
+
+    - name: Terraform ec2 plan
+      id: plan 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./ec2
+      run: terraform plan -input=false
+  
+    - name: Terraform ec2 Apply  
+      id: apply 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./ec2
+      run: terraform apply -auto-approve -input=false
+  
+  alb:
+    name: deploy alb
+    runs-on: ubuntu-latest
+    needs: ec2
+
+    steps:
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name:  Terraorm alb init
+      id: init
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./alb
+      run: terraform init
+
+    - name: Terraform alb plan
+      id: plan 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./alb
+      run: terraform plan -input=false
+  
+    - name: Terraform alb Apply  
+      id: apply 
+      env: 
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      working-directory: ./alb
+      run: terraform apply -auto-approve -input=false
+
+
+### Comment
+```
+  
 
 
