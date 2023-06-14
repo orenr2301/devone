@@ -419,8 +419,7 @@ Now lets decouple each components to be explained shortly.
 
 
 * [Terraform EC2](#Terraform-EC2)
-* [Terraform ECR](#Terraform-ECR)
-* [Terraform S3](#Terraform-S3)
+* [Terraform ECR S3](#Terraform-ECR-S3)
 * [Terraform ALB](#Terraform-ALB)
 
 
@@ -816,4 +815,152 @@ aws s3 cp s3://<your-bucket-name>/mongo-init.js .
 
 docker-compose up -d
 ```
+</details>
+
+
+### Terraform ECR S3
+<details><summary>SHOW</summary>
+
+ * [ecr-main.tf](#ecr-main.tf) 
+ * [variables.tf](#variables.tf)
+ * [vairables.auto.tfvars](#vairables.auto.tfvars)
+
+
+Since we  built the app, in a way, that we will need to deploy it via containers, i need a place to store them. As  i dont have a proper way to upload all files to built from them and do everything on ec2 machine at startup.
+
+I need to make sure user dtata is not exceeding 64KB therefore my user-data script must be relativitely short and to the point. 
+
+I could have done this with with uploading all filed to S3 and then copy files to machine, but than i would need to built images, switch directories, make sure each file in place and etc.
+
+To much Work and and pre ready images are doing the work just fine.
+
+I could also make a predefined bash script  deliver to s3 and download from s3 and execute on server, but Hey . . . If we have a chance to deal and play with other component and develop our skill, then why not.
+
+Easy sometimes and be very boaring and not out of the box. A DevOps guy must think out of the box to accomplish new solutions to complex situations.
+
+
+#### ecr-main.tf
+
+Short Overview:
+
+:basketball: Creating our ECR repository and its must attributes For Stroing our images
+
+:basketball: Creating our S3 backut to store the additional files
+
+```hcl
+
+terraform {
+  required_providers {
+    aws = {
+        source = "hashicorp/aws"
+        version = "~> 3.0"
+    }
+  }
+}
+
+provider "aws" {
+    /* access_key = var.aws_access_key
+    secret_key = var.aws_secret_key */
+    region = "eu-central-1"
+    profile = "default"
+}
+
+
+
+resource "aws_ecr_repository" "ecr" {
+    for_each = toset(var.ecr_name)
+    name = each.key
+    image_tag_mutability = var.image_mutability
+
+    encryption_configuration {
+      encryption_type = var.encrypt_type
+    }
+
+    image_scanning_configuration {
+      scan_on_push = false
+    }
+
+    tags = var.tags 
+  
+}
+
+resource "aws_s3_bucket" "octo_s3" {
+  bucket = "${var.s3_name}"
+  force_destroy = true
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  tags = {
+    Name = "${var.s3_name}"
+    Environment = "test"
+  }
+}
+
+```
+
+#### variables.tf
+
+Short Overview:
+
+:basketball: Defining our variables for ecr and s3 resources
+
+
+```hcl
+
+variable "ecr_name" {
+
+    description = "The list of ecr names to create"
+    type = list(string)
+    default = null
+}
+
+variable "tags" {
+    description = "The key value map for tagging"
+    type = map(string)
+    default = {}
+  
+}
+
+variable "image_mutability" {
+    description = "Provide image mutability"
+    type = string
+    default = "MUTABLE"
+}
+
+variable "encrypt_type" {
+    description = "Provider type of encryption here"
+    type = string
+    default = "KMS"
+}
+
+variable "s3_name" {
+    description = "s3 bucket name"
+    type = string
+    default = null
+}
+
+```
+
+#### vairables.auto.tfvars
+
+Short Overview:
+
+:basketball: setting variables value for ecr and s3 resources
+
+```hcl
+tags = {
+    "Environment" = "you-environment name"
+}
+
+ecr_name = [
+    "your-ecr-repository-name"
+]
+
+image_mutability = "IMMUTABLE"
+
+s3_name = "you-bucket-name"
+````
+
 </details>
