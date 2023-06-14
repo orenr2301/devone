@@ -1668,13 +1668,26 @@ After creating a change I pushed, created a pull request and letting the workflo
 ![image](https://github.com/orenr2301/devone/assets/117763723/6d247cde-0607-42b0-89ad-57fd669ca22f)
 
 
-### EC2 and ALB Securiy Groups
+### EC2 and ALB Security Groups
 
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/829641e4-2eba-4dda-ae26-92bed97da0ca)
 
 
+# Final Application Result: Display the Qty of apples from the MongoDB Database
 
+![image](https://github.com/orenr2301/devone/assets/117763723/afe3939f-ab1f-4b43-9a23-4a0914cde95a)
+
+
+:o: The final result is the from the CI/CD WorkFlow of the python app. As mentioned previously i am not usually coding with nodeJS and took me a lot time to understand when im failing with the nodjs app
+
+    With the NodeJS app im resulting with "504 Bad GateWay"
+
+    Means that im reaching the app but somehow the required data isnt being fetched from the MongoDB container to the Nodejs web app container and request resulting in timeout due to several attempts that not being responsded
+
+    I was assuming i might be getting this kind off stuff as im not fammiliar enough with the nodeJS code well enough and still need to learn further aspects to achieve wanted result. 
+
+    As it took me long to  try understand where excatly im falling i decided just in case to make a python app which im coding on much often basis
 
 
 
