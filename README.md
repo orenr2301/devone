@@ -1622,7 +1622,9 @@ jobs:
 
 OK, Now the final stage of the deployment, 
 
-After creating a change I pushed, created a pull request and letting the workflow to run triggered based on the pull request
+After creating a change I pushed, created a pull request and letting the workflow to run, triggered based on the pull request.
+
+<details><summary>SHOW</summary>
 
 ## Workflow Triggered by pull request 
 
@@ -1679,16 +1681,16 @@ After creating a change I pushed, created a pull request and letting the workflo
 ![image](https://github.com/orenr2301/devone/assets/117763723/afe3939f-ab1f-4b43-9a23-4a0914cde95a)
 
 
-:o: The final result is the from the CI/CD WorkFlow of the python app. As mentioned previously i am not usually coding with nodeJS and took me a lot time to understand when im failing with the nodjs app
+:o: The final result is from the CI/CD WorkFlow of the Python app. As mentioned previously I am not usually coding with nodeJS and took me a lot of time to understand when I'm failing with the nodsjs app
 
-    With the NodeJS app im resulting with "504 Bad GateWay"
+    With the NodeJS app im resulting with "504 BadGatewayy"
 
-    Means that im reaching the app but somehow the required data isnt being fetched from the MongoDB container to the Nodejs web app container and request resulting in timeout due to several attempts that not being responsded
+    This means that I'm reaching the app but somehow the required data isn't being fetched from the MongoDB container to the Nodejs web app container and the  request results in a timeout due to several attempts not being responded
 
-    I was assuming i might be getting this kind off stuff as im not fammiliar enough with the nodeJS code well enough and still need to learn further aspects to achieve wanted result. 
+    I was assuming I might be getting this kind of stuff as I'm not familiar enough with the nodeJS code well enough and still need to learn further aspects to achieve the wanted result. 
 
-    As it took me long to  try understand where excatly im falling i decided just in case to make a python app which im coding on much often basis
+    As it took me a long to try to understand where exactly I'm falling I decided just in case to make a Python app which im coding on much often basis
 
-
+</details>
 
 
