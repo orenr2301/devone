@@ -421,12 +421,12 @@ Now lets decouple each components to be explained shortly.
 ### Terraform EC2
 <details><summary>SHOW</summary>
 
- *[ec2-main.tf](#ec2-main.tf)
- *[ec2-sg.tf](#ec2-sg.tf)
- *[variables.tf](#variables.tf)
- *[ec2.auto.tfvars](#ec2.auto.tfvars)
- *[outputs.tf](#outputs.tf)
- *[user-data.tftpl](#user-data.tftpl)
+ * [ec2-main.tf](#ec2-main.tf)
+ * [ec2-sg.tf](#ec2-sg.tf)
+ * [variables.tf](#variables.tf)
+ * [ec2.auto.tfvars](#ec2.auto.tfvars)
+ * [outputs.tf](#outputs.tf)
+ * [user-data.tftpl](#user-data.tftpl)
  
 
 Our App will be hosted over docker container on EC2 instance. Therefor i will have to deploy it to my aws account, wanted vpc, security group, policies, IAM roles and user-data to make sure the instance is ready to response to my request when deploy finish so i can say "Look mom. . . no hands at all :smiley:"
@@ -436,8 +436,13 @@ Our App will be hosted over docker container on EC2 instance. Therefor i will ha
 #### ec2-main.tf
 
 Short Overview:
+
 :basketball: Provider is AWS since im deploying to AWS
+
+
 :basketball: Creating a template file which store my user data bash script for the ec2 cloud-init at startup
+
+
 :basketball: Creating the ec2 instance resource with the basic attributes, which ami, which vpc to deploy, the security group to be attached, the instance role to be added, the ssh key pair name, and user-data to use from within respective file including vars which im using in the tptpl file itself
 
 
@@ -488,9 +493,13 @@ resource "aws_instance" "octo" {
 #### ec2-sg.tf
 
 Short Overview:
+
 :basketball: Creating the Security group of the ec2 instance
+
 :basketball: Defining the inbound and outbound rules
+
 :basketball: Creating the instance profile and IAM role
+
 :basketball: Defining IAM role polciies of what the instance can do or not 
 
 ```hcl
@@ -633,7 +642,10 @@ EOF
 
 Short Overview:
 
+
 :basketball: Creating the vars to be used in my terraform code, as if i need to change an attaribute so i have one place to do it
+
+
 :basketball: You will get to see that im using this all over my files to achieve flexibility 
 
 ```hcl
@@ -716,8 +728,13 @@ s3_name = "your bucket name(in case you put your default value in s4_name variab
 
 Short Overview:
 
+ 
  :basketball: Defining data sources to filter specific data
+ 
+ 
  :basketball: Defining output soruces to print the filtered data to screen at the end of the apply
+ 
+ 
  :basketball: At the output level im also able to get more specific atrribute of the filtered data if i want to
 
 ```hcl
@@ -756,9 +773,16 @@ output "account_id" {
 
 Short Overview:
 
+
 :basketball: Using user data to install docker engine and docker compose plugin on ec2 instance
+
+
 :basketball: using tftpl file template variables from ec2 instance resource so i can login ecr
+
+
 :basketball: Exporting the variables to current tty shell and use this to login to ecr for later pulling images
+
+
 :basketball: copying needed file to accomplishe docker compose setup
 
 
