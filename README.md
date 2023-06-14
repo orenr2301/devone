@@ -263,6 +263,9 @@ RUN npm install
 
 COPY . .
 
+ENV MONGO_INITDB_ROOT_PASSWORD=admin
+ENV MONGO_INITDB_ROOT_USERNAME=admin
+
 EXPOSE 80
 
 CMD ["node", "app.js"]
@@ -286,6 +289,8 @@ COPY . .
 
 ENV MONGO_URL="mongodb://mongodb:27017"
 ENV DB_NAME="docker_db"
+ENV MONGO_INITDB_ROOT_PASSWORD=admin
+ENV MONGO_INITDB_ROOT_USERNAME=admin
 
 EXPOSE 80
 
@@ -293,3 +298,83 @@ CMD ["python", "app.py"]
 ~~~
 
 </details>
+
+### Compose full app
+
+* [Nodejs Docker compose](#Nodejs-Docker-compose)
+* [Python Docker compose](#Python-Docker-compose)
+
+After building the wanted images, we would like to make a single run to deploy our app with mongo image to be our databse which will host our data to be fetched from the nodejs application be built earlier.
+
+Remeber we built only the app. for the mongodb container we will have a container which we will insert the data with js init file.
+
+#### Nodejs Docker compose
+~~~bash
+version: "3.3"
+
+services:
+  app:
+    container_name: node-app
+    image: nodejsapp:1
+    ports:
+    - 80:80
+    networks:
+    - octo_network
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+    - 27017:27017
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+    - octo_network
+
+
+networks:
+  octo_network:
+      external: true
+~~~
+
+#### Python docker compose
+
+~~~bash
+version: "3.8"
+
+services:
+  app:
+    container_name: py-app
+    image: octo:3
+    ports:
+    - 80:80
+    networks:
+    - my_network
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+    - 27017:27017
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      #- mongoDB:/data/db
+    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+    - my_network
+
+
+      #volumes:
+      #mongoDB: {}
+
+networks:
+  my_network:
+      external: true
+~~~
