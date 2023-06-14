@@ -21,6 +21,12 @@ Prior Knowledge to gain or to have:
     
 **[3.Build The Infrastructure](#Build-The-Infrastructure)**
   * [IaC with Terraform](#IaC-With-Terraform)
+
+**[4.Deploy The Infrastructure](#Deploy-The-Infrastructure)**
+  * [The Power of Github](#The-Power-Of-Github)
+    * [Github Pull Request](#Github-Pull-Request)
+    * [Github Actions](#Github-Actions)
+  * [Ready Set Go CI/CD](#Ready-Set-Go-CI/CD)
     
 
 ## Welcome 
