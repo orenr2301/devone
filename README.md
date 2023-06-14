@@ -1615,3 +1615,14 @@ jobs:
   
 </details>
 
+
+
+# Ready Set Go CI/CD
+
+
+OK, Now the final stage of the deployment, 
+
+After creating a change I pushed, created a pull request and letting the workflow to run triggered based on the pull request
+
+
+
