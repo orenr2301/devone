@@ -426,12 +426,12 @@ Now lets decouple each components to be explained shortly.
 
 ### Terraform EC2
 
-* [ec2-main.tf](#ec2-main.tf)
-* [ec2-sg.tf](#ec2-sg.tf)
-* [variables.tf](#variables.tf)
-* [ec2.auto.tfvars](#ec2.auto.tfvars)
-* [outputs.tf](#outputs.tf)
-* [user-data.tftpl](#user-data.tftpl)
+* [ec2 main tf](#ec2-main-tf)
+* [ec2 sg tf](#ec2-sg-tf)
+* [variables tf](#variables-tf)
+* [ec2 auto tfvars](#ec2-auto-tfvars)
+* [outputs tf](#outputs-tf)
+* [user data tftpl](#user-data.tftpl)
   
 <details><summary>SHOW</summary>
 
@@ -440,7 +440,7 @@ Our App will be hosted over docker container on EC2 instance. Therefor i will ha
 
 
 
-#### ec2-main.tf
+#### ec2 main tf
 
 Short Overview:
 
@@ -497,7 +497,7 @@ resource "aws_instance" "octo" {
 ```
 
 
-#### ec2-sg.tf
+#### ec2 sg tf
 
 Short Overview:
 
@@ -645,7 +645,7 @@ EOF
 
 ```
 
-#### variables.tf
+#### variables tf
 
 Short Overview:
 
@@ -718,7 +718,7 @@ variable "s3_name" {
 }
 ```
 
-#### ec2.auto.tfvars
+#### ec2 auto tfvars
 
 Short Overview:
 :basketball: Defining the variable values which are set as null in the variables file 
@@ -731,7 +731,7 @@ s3_name = "your bucket name(in case you put your default value in s4_name variab
 ```
 
 
-#### outputs.tf
+#### outputs tf
 
 Short Overview:
 
@@ -776,7 +776,7 @@ output "account_id" {
 
 ```
 
-#### user-data.tftpl
+#### user data tftpl
 
 Short Overview:
 
