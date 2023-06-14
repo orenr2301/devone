@@ -1285,17 +1285,18 @@ Some Checks to make:
   
 2. After Downloading: clone your repository to your local pc
 
-    ```git clone https://github.com/your-username-name/your-repository.git```
 
-4.  Great, the repository is now downloaded with your code, now I want to fork the repository and make an offline changes that won't affect main code
+```git clone https://github.com/your-username-name/your-repository.git```
+
+4.  Great, the repository is now downloaded with your code, now I want to fork the repository and make offline changes that won't affect the main code
 
     1. Create a new branch 
 
-    ``` git checkout -b new-branch-name ```
+``` git checkout -b new-branch-name ```
 
    2.  fork the main branch repo 
 
-       ``` git add mode origin  https://github.com/your-username-name/your-repository.git ```
+``` git add mode origin  https://github.com/your-username-name/your-repository.git ```
 
 4. Now your  new branch is "linked" with the main repository
 
@@ -1304,20 +1305,20 @@ Some Checks to make:
 6.
    1. Git add 
     
-      ``` git add . ```
+ ``` git add . ```
 
      can be a  specific file
 
-       ``' git add my-file.txt ```
+  ``` git add my-file.txt ```
   
 
     3. Git commit
        
-       ``` git commit -m "changed code for prod ```
+ ``` git commit -m "changed code for prod ```
 
     4. Push your code
        
-       ``` git push -u origin new-branch-name ```
+ ``` git push -u origin new-branch-name ```
 
  8. After Push if you go into your GitHub repository you will see that a pull and merge request is waiting:
 
