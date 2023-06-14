@@ -393,6 +393,393 @@ To achive this i needed a way to fast deploy the infrustucture to host my app an
 For that Purpose picked up Terraform as my IaC, other tools to that can perform IaC are Ansible,AWS CloudFormation, Pulumi, Chef, Saltstack(Common in Openstack environments), Puppet and etc.
 
 ## IaC with Terraform
-:basketball: hello
+
+Here where the part of the fun begins.
 
 
+
+With Terraform I was able to provision my infrastucture as code to lay down the ground with the compomnents to help me achieve my goal.
+
+The Componenets/Services that im going to provision are:
+:diamond_shape_with_a_dot_inside: EC2 instance
+:diamond_shape_with_a_dot_inside: ECR (:small_blue_diamond: Elastic Container Regisry)
+:diamond_shape_with_a_dot_inside: S3 Bucket
+:diamond_shape_with_a_dot_inside: ALB (:small_blue_diamond: Application Load Balancer)
+
+Now lets decouple each components to be explained shortly.
+:sparkler: I wont explain each method of  what it's doing. Im assuming you are pretty less or more how to play with terraform well enough to understand what im doing :sparkler:
+
+*[Terraform EC2](#Terraform-EC2)
+*[Terraform ECR](#Terraform-ECR)
+*[Terraform S3](#Terraform-S3)
+*[Terraform ALB](#Terraform-ALB)
+
+
+
+### Terraform EC2
+<details><summary>SHOW</summary>
+
+ *[ec2-main.tf](#ec2-main.tf)
+ *[ec2-sg.tf](#ec2-sg.tf)
+ *[variables.tf](#variables.tf)
+ *[ec2.auto.tfvars](#ec2.auto.tfvars)
+ *[outputs.tf](#outputs.tf)
+ *[user-data.tftpl](#user-data.tftpl)
+ 
+
+Our App will be hosted over docker container on EC2 instance. Therefor i will have to deploy it to my aws account, wanted vpc, security group, policies, IAM roles and user-data to make sure the instance is ready to response to my request when deploy finish so i can say "Look mom. . . no hands at all :smiley:"
+
+
+
+#### ec2-main.tf
+
+Short Overview:
+:basketball: Provider is AWS since im deploying to AWS
+:basketball: Creating a template file which store my user data bash script for the ec2 cloud-init at startup
+:basketball: Creating the ec2 instance resource with the basic attributes, which ami, which vpc to deploy, the security group to be attached, the instance role to be added, the ssh key pair name, and user-data to use from within respective file including vars which im using in the tptpl file itself
+
+
+```hcl
+
+terraform {
+  required_providers {
+    aws = {
+        source = "hashicorp/aws"
+        version = "~> 3.0"
+    }
+  }
+}
+
+provider "aws" {
+    access_key = var.aws_access_key
+    secret_key = var.aws_secret_key
+    region = "eu-central-1"
+    profile = "default"
+}
+
+
+data "template_file" "ecr-init" {
+  template = "user-data.tpl"
+
+}
+
+resource "aws_instance" "octo" {
+  ami = data.aws_ami.octo_ami.id
+  instance_type = var.instance_type
+  vpc_security_group_ids = ["${aws_security_group.ec2-vm.id}"]
+  iam_instance_profile = aws_iam_instance_profile.ec2-profile-octo-ec2-role.name
+  
+  tags = {
+    Name = "octopus-vm"
+    project = "octo"
+  }
+
+  key_name = "aws-internal"
+
+  user_data =  templatefile("user-data.tftpl", { ecr_url = data.aws_ecr_repository.uri.repository_url,  ecr_region = var.aws_region })
+  
+}
+
+```
+
+
+#### ec2-sg.tf
+
+Short Overview:
+:basketball: Creating the Security group of the ec2 instance
+:basketball: Defining the inbound and outbound rules
+:basketball: Creating the instance profile and IAM role
+:basketball: Defining IAM role polciies of what the instance can do or not 
+
+```hcl
+resource "aws_security_group" "ec2-vm" {
+    name = "ec2-vm-sc"
+    description = "Allow Incoming connections"
+
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow Incoming HTTP connections"
+    }
+    
+    ingress  {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow Incoming HTTPS connections"
+    }
+
+    ingress  {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow Incoming SSH connections"
+    }
+
+
+    ingress  {
+        from_port = -1
+        to_port = -1
+        protocol = "icmp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow Incoming icmp connections"
+    }
+
+    egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+    description =  "All egress traffic"
+  }
+
+  tags = {
+    Name = "terraform-ec2-sg"
+  }
+}
+
+
+resource "aws_iam_role" "octo-ec2-role" {
+  name = "octo-ec2-ecr"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+  
+  tags = {
+    project = "octo"
+  }
+}
+
+resource "aws_iam_instance_profile" "ec2-profile-octo-ec2-role" {
+  name = "ec2_pfogile_octo_ec2_role"
+  role = aws_iam_role.octo-ec2-role.name
+}
+
+resource "aws_iam_role_policy" "octo_ec2_policy" {
+  name = "octo_ec2_policy"
+  role = aws_iam_role.octo-ec2-role.id
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:CompleteLayerUpload",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "octo_ec2_s3_policy" {
+  name = "octo_ec2_s3_policy"
+  role = aws_iam_role.octo-ec2-role.id
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:DeleteObject"
+      ],
+      "Sid" : "VisualEditor",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::*/*",
+        "arn:aws:s3:::${var.s3_name}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+```
+
+#### variables.tf
+
+Short Overview:
+
+:basketball: Creating the vars to be used in my terraform code, as if i need to change an attaribute so i have one place to do it
+:basketball: You will get to see that im using this all over my files to achieve flexibility 
+
+```hcl
+variable "aws_access_key" {
+    description = "AWS access key"
+    type = string
+    default = null
+}
+
+variable "aws_secret_key" {
+    description =  "AWS secret key"
+    type = string
+    default = null
+}
+
+variable "aws_region" {
+    description = "AWS region"
+    type = string
+    default = "eu-central-1"
+}
+
+
+variable "instance_type" {
+    type = string
+    default = "t2.micro"
+}
+
+variable "aws_ec2_ami" {
+    description = "AMI image"
+    type = string
+    default = null
+}
+
+
+variable "set_vpc" {
+    type = string
+    description = "aws vpc-id" 
+    default = null     
+}
+
+variable "set_cidr" {
+    type = list(string)
+    description = "aws vpc cider to set"
+    default = null
+}
+
+
+data "aws_ami" "octo_ami" {
+    most_recent = true
+    owners = ["amazon"]
+
+    filter {
+      name = "name"
+      values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+    }
+  
+}
+
+variable "s3_name" {
+    description = "s3 bucket name"
+    type = string
+    default = "put-your-bucket-name-here"
+}
+```
+
+#### ec2.auto.tfvars
+
+Short Overview:
+:basketball: Defining the variable values which are set as null in the variables file 
+
+```hcl
+aws_region = "your-region"
+aws_ec2_ami = "ami-id"
+set_cidr = ["cidr net of vpc"]
+s3_name = "your bucket name(in case you put your default value in s4_name variable as null)"
+```
+
+
+#### outputs.tf
+
+Short Overview:
+
+ :basketball: Defining data sources to filter specific data
+ :basketball: Defining output soruces to print the filtered data to screen at the end of the apply
+ :basketball: At the output level im also able to get more specific atrribute of the filtered data if i want to
+
+```hcl
+output "ec2_public_ip" {
+  
+  description = "ec2 public ip"
+  value = aws_instance.octo.public_ip
+}
+
+output "ec2_url" {
+    description = "ec2 public url dns"
+    value = aws_instance.octo.public_dns
+}
+
+
+data "aws_ecr_repository" "uri" {
+  #description = "get ecr devonce repository"
+  name = "devone"
+  
+}
+
+output "ecr-url" {
+  description = "ec2 ecr"
+  value = "${data.aws_ecr_repository.uri.repository_url}"
+}
+
+data "aws_caller_identity" "current" {}
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+
+```
+
+#### user-data.tftpl
+
+Short Overview:
+
+:basketball: Using user data to install docker engine and docker compose plugin on ec2 instance
+:basketball: using tftpl file template variables from ec2 instance resource so i can login ecr
+:basketball: Exporting the variables to current tty shell and use this to login to ecr for later pulling images
+:basketball: copying needed file to accomplishe docker compose setup
+
+
+```hcl
+#!/bin/bash
+set -ex
+yum update -y
+amazon-linux-extras install docker -y
+systemctl enable docker --now
+usermod -a -G docker ec2-user
+curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+export ecr_region=${ecr_region}
+export ecr_url=${ecr_url}
+
+
+/usr/bin/aws ecr get-login-password --region ${ecr_region} | docker login --username AWS --password-stdin ${ecr_url}
+docker network create octo_network
+
+aws s3 cp s3://<your-bucket-name>/docker-compose.yaml .
+aws s3 cp s3://<your-bucket-name>/mongo-init.js .
+
+docker-compose up -d
+```
+</details>
