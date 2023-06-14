@@ -1327,28 +1327,29 @@ Some Checks to make:
 
  7. After Push if you go into your GitHub repository you will see that a pull and merge request is waiting:
 
-    
- Seethe  below pictures to see what its looks like and make sure you are having the same
+=======================================================================================
+
+See the  below pictures to see what it looks like and make sure you are having the same
 
 If you made changes then you will be able also to review and leaves comment 
 
 
-You will see on main branch  the "Compare and pull requests "
+### You will see on the main branch  the "Compare and pull requests "
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/3772bcf7-ece2-4904-a3ee-d1db5312fc36)
 
 
-After then you are opening the pull request
+### After then you are opening the pull request
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/12caf3b0-824f-4d60-b672-a2864fe4f0be)
 
 
-Then if anything else is needed your fix or approve you will see it if not then you can merge 
+### Then if anything else is needed your fix or approve you will see it if not then you can merge 
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/2a89851f-bf18-47f4-a937-4ae5a5f383f1)
 
 
-And Voila!, pull request is done - branches has being merged, and now you can delete the fork branch if wanted 
+### And Voila!, pull request is done - branches has being merged, and now you can delete the fork branch if wanted 
 
 ![image](https://github.com/orenr2301/devone/assets/117763723/3473cb56-0c64-4ad6-9bea-a20396856f0c)
 
