@@ -1270,6 +1270,51 @@ alt="Click Me To Learn Git Better" width="400" height="120" border="10" /></a>
 :octocat: To be able to make versions of our code, all that helps us to collaborate check each other and still maintain production code 
 
 
+## Github Pull Request
 
+Some Checks to make: 
+- [ ] Code is ready? 
+- [ ] I can now push code? 
+- [ ] Did the code pass relevant checks ?! 
+- [ ] Do I have another branch beside the main branch?
+- [ ] Have you looked at your code once more?
+      
+### Well if at least 2 are answered with no then make sure to prepare your workspace for the PR 
+
+1. If using Windows then download git-bash cmd first
+  
+2. After Downloading: clone your repository to your local pc
+   ```git clone https://github.com/your-username-name/your-repository.git```
+
+3.  Great, the repository is now downloaded with your code, now I want to fork the repository and make and offline changes that wont affect main code
+
+    1. Create a new branch 
+  ``` git checkout -b new-branch-name ```
+
+   2.  fork the main branch repo 
+     ``` git add mode origin  https://github.com/your-username-name/your-repository.git ```
+
+4. Now your  new branch is "linked" with the main repository
+
+5. Make changes necessary change to your code and then commit and push
+ 
+6.
+   1. Git add 
+      ``` git add . ```
+   can be a  specific file
+   ``' git add my-file.txt ```
+
+    2. Git commit
+       ``` git commit -m "changed code for prod"
+
+    3. Push your code
+       ``` git push -u origin new-branch-name ```
+
+ 7. After Push if you go into your GitHub repository you will see that a pull and merge request is waiting:
+
+    
+   
+   
+   
 
 
