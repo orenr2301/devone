@@ -968,7 +968,9 @@ s3_name = "you-bucket-name"
 
 ### Terraform ALB
 
-<details><summary>ALB Short Information and Methods</summary>
+
+
+:heavy_dollar_sign: <details><summary>LoadBalancer Short Information and Methods</summary> :heavy_dollar_sign:
  
 As many infrastructures are maintained the desired state of having a High Availability in their Environment, and also to load balance between user requests and traffic, in most cloud providers we will use a LoadBalancer component to achieve this.
 
