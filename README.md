@@ -1312,15 +1312,15 @@ Some Checks to make:
   ``` git add my-file.txt ```
   
 
-    3. Git commit
+    2. Git commit
        
  ``` git commit -m "changed code for prod ```
 
-    4. Push your code
+    3. Push your code
        
  ``` git push -u origin new-branch-name ```
 
- 8. After Push if you go into your GitHub repository you will see that a pull and merge request is waiting:
+ 7. After Push if you go into your GitHub repository you will see that a pull and merge request is waiting:
 
     
    
