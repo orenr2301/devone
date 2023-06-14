@@ -1346,7 +1346,8 @@ If you made changes then you will be able also to review and leaves comment
 
 ## Then if anything else is needed your fix or approve you will see it if not then you can merge 
 
-![image](https://github.com/orenr2301/devone/assets/117763723/2a89851f-bf18-47f4-a937-4ae5a5f383f1)
+![image](https://github.com/orenr2301/devone/assets/117763723/1af059f2-f586-4465-ba83-2165380b80b2)
+
 
 
 ## And Voila!, pull request is done - branches has being merged, and now you can delete the fork branch if wanted 
