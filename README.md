@@ -1245,5 +1245,16 @@ locals {
 
 </details>
 
+# The Power Of Github
 
+Great You got this far and have deployed the above code and tried it out manually?!
 
+Then it is now the time to automate for real. . . 
+
+####Hold your Horses, Son . . .
+
+:no_entry_sign: If not yet familiar with git then Stop reading and refer to below:  :point_left:
+
+<a href="https://www.youtube.com/watch?v=3RjQznt-8kE&list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR
+" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
