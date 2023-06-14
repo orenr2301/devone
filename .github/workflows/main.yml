@@ -1,15 +1,6 @@
 name: 'Terraform deploy'
 
 on:
-  push:
-    branches:
-    - main
-    paths: 
-    - alb/**
-    - ec2/**
-    - ecr/**
-    - node-app/**
-    - pyy-app/**
   pull_request:
     branches:
     - main
