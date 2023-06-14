@@ -1366,6 +1366,8 @@ Well Well here we are after doing the git stuff we can now run our deployments
 - With GitHub action, we can take our code and elevate it to be executed automatically without doing anything manual
 - With GitHub action, the only thing you need to do, is deal with your code, commit, and push changes
 
+<details><summary>SHOW</summary>
+
 ### Let's Create Our Git Action workflow 
 
 We need a few things for it to work:
@@ -1609,9 +1611,7 @@ jobs:
       working-directory: ./alb
       run: terraform apply -auto-approve -input=false
 
-
-### Comment
 ```
   
-
+</details>
 
