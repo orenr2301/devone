@@ -1,4 +1,4 @@
-![image](https://github.com/orenr2301/devone/assets/117763723/e15fe25b-5bd8-443a-af04-36b9dea53575)# DevOne - Build your containerized app with Terraform GitHub Actions and AWS 
+# DevOne - Build your containerized app with Terraform GitHub Actions and AWS 
 Prior Knowledge to gain or to have:
 
  - Understanding of container tech and bit Experience of how to build "Docker Images"
