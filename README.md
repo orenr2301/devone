@@ -15,9 +15,9 @@ Prior Knowledge to gain or to have:
 **[1.Welcome Aboard](#Welcome-Aboard)**
   * [Introduction](#Introduction)  
   * [Design and Prerequisites](#Design-and-Prerequisites)    
-**[2.Application](#Application)
+**[2.Application](#Application)**
   *[Code your app](#Code-your-app)
-**[3.Build The Infrastructure](#Build-The-Infrastructure)
+**[3.Build The Infrastructure](#Build-The-Infrastructure)**
   *[IaC with Terraform](#IaC-With-Terraform)
     
 
