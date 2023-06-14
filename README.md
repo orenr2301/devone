@@ -425,16 +425,16 @@ Now lets decouple each components to be explained shortly.
 
 
 ### Terraform EC2
+
+* [ec2-main.tf](#ec2-main.tf)
+* [ec2-sg.tf](#ec2-sg.tf)
+* [variables.tf](#variables.tf)
+* [ec2.auto.tfvars](#ec2.auto.tfvars)
+* [outputs.tf](#outputs.tf)
+* [user-data.tftpl](#user-data.tftpl)
+  
 <details><summary>SHOW</summary>
 
- 
- * [ec2-main.tf](#ec2-main.tf)
- * [ec2-sg.tf](#ec2-sg.tf)
- * [variables.tf](#variables.tf)
- * [ec2.auto.tfvars](#ec2.auto.tfvars)
- * [outputs.tf](#outputs.tf)
- * [user-data.tftpl](#user-data.tftpl)
- 
 
 Our App will be hosted over docker container on EC2 instance. Therefor i will have to deploy it to my aws account, wanted vpc, security group, policies, IAM roles and user-data to make sure the instance is ready to response to my request when deploy finish so i can say "Look mom. . . no hands at all :smiley:"
 
