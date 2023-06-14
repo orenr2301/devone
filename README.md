@@ -1261,3 +1261,15 @@ alt="Click Me To Learn Git Better" width="400" height="120" border="10" /></a>
 
 | Click On Picture To Lean Git Better |
 |-------------------------------------|
+
+
+:octocat: On day-to-day tasks in teams,  we need to collaborate our code with others in order to enrich and push forward the product we are developing. 
+
+:octocat: Therefore we need an onc source and version control to store our code, created a branch for each stage, to fork the repository in order to make changes per our progress 
+
+:octocat: To be able to make versions of our code, all that helps us to collaborate check each other and still maintain production code 
+
+
+
+
+
