@@ -27,7 +27,9 @@ Prior Knowledge to gain or to have:
     * [Github Pull Request](#Github-Pull-Request)
     * [Github Actions](#Github-Actions)
   * [Ready Set Go CI CD](#Ready-Set-Go-CI-CD)
-    
+
+**[5.Final Network and Service Solution Architecute Flow](#Final-Network-and-Service-Solution-Architecute-Flow)**
+  * [Top level architecture flow](#Top-level-architecture-flow)
 
 ## Welcome 
 
@@ -69,7 +71,7 @@ And most industry-standard tools out there.
 
 ## Design
 \\
- lets talk about  Design First 
+ let's talk about  Design First 
 
 
 We Need to perform the following:
@@ -83,7 +85,7 @@ We Need to perform the following:
     - The right idea is that we need to build and store images, then store files app related, and then make a single point that will host of docker containers and will be able to pull files from storage/repos for what we need.
     \
 \
-    Seebelowo the  Architecture flow:
+    See below the  Architecture flow:
 ![image](https://github.com/orenr2301/devone/assets/117763723/6042d14a-d64a-4442-a01e-4d750c3bc2df)
 
 \\
@@ -1693,4 +1695,32 @@ After creating a change I pushed, created a pull request and letting the workflo
 
 </details>
 
+# Top-level architecture flow
+* [Flow Design](#Flow-Design)
 
+<details><summary>SHOW</summary>
+ 
+## Below is the final network and main components architecture top-level design flow
+- Creating HTTP request to ALB public DNS name
+- Flow via public into the AWS cloud
+- Looking at the target group
+- In the target group out ec2 instance to get the request
+- EC2 instance gets the request and delivers it to the container which takes the host vm request on port 80
+- request gets into the container which listens on port 80
+- Request is being rendered and the app rendering the request
+- Web app connects to MongoDB on port 27017
+- MongoDB which listens on port 27017 looks at the request to fetch data
+- Request go back up to host vm to load balancer to client
+
+### Other actions and flow
+- GitHub Actions build and push images to ECR
+- GitHub Actions uploads files to S3 Bucket 
+- EC2 instance pull image from ECR
+- EC2 download files from S3 Bucket
+- IAM role to have EC2 the permissions to pull off mentioned actions
+
+ # Flow Design
+
+![image](https://github.com/orenr2301/devone/assets/117763723/2e0e067a-72a4-4ea5-83fa-605c0c2dc94f)
+
+</details>
